@@ -1,0 +1,254 @@
+/* SignUp Page Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+.signup-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--midnight-navy);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.logo-position {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.logo-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--soft-white);
+  letter-spacing: 0.5px;
+}
+
+.signup-content {
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+}
+
+.signup-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.signup-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: var(--soft-white);
+}
+
+.signup-header p {
+  font-size: 1rem;
+  color: var(--slate-gray);
+  line-height: 1.4;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--slate-gray);
+}
+
+.form-group input {
+  padding: 0.6rem;
+  border: 1px solid var(--dark-blue);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  background-color: rgba(13, 27, 42, 0.7);
+  color: var(--soft-white);
+  transition: border-color 0.15s ease;
+  width: 100%;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--light-teal);
+  box-shadow: 0 0 0 3px rgba(58, 193, 184, 0.2);
+}
+
+.form-group input::placeholder {
+  color: var(--slate-gray);
+  opacity: 0.6;
+}
+
+.terms-agreement {
+  font-size: 0.8rem;
+  color: var(--slate-gray);
+  margin: 0.75rem 0;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.terms-link {
+  color: var(--light-teal);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.terms-link:hover {
+  color: var(--emerald-green);
+  text-decoration: underline;
+}
+
+.signup-button {
+  padding: 0.6rem 1.5rem;
+  background-color: var(--light-teal);
+  color: var(--midnight-navy);
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.signup-button:hover {
+  background-color: var(--emerald-green);
+}
+
+.signup-button.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.or-continue {
+  margin: 1rem 0 0.75rem;
+  color: var(--slate-gray);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.oauth-options {
+  display: flex;
+  width: 100%;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.oauth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--dark-blue);
+  border-radius: 0.375rem;
+  background-color: rgba(13, 27, 42, 0.7);
+  color: var(--soft-white);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  max-width: 200px;
+  width: 100%;
+}
+
+.google-button {
+  border: 1px solid #4285f4;
+  background-color: rgba(66, 133, 244, 0.1);
+}
+
+.google-button:hover {
+  background-color: rgba(66, 133, 244, 0.2);
+}
+
+.signin-option {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: var(--slate-gray);
+  text-align: center;
+}
+
+.signin-link {
+  color: var(--light-teal);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.signin-link:hover {
+  color: var(--emerald-green);
+  text-decoration: underline;
+}
+
+.error-message {
+  background-color: rgba(239, 68, 68, 0.2);
+  border-left: 4px solid #ef4444;
+  color: #fca5a5;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  width: 100%;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .signup-page {
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signup-content {
+    max-width: 90%;
+    padding: 1rem;
+  }
+  
+  .logo-position {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+  
+  .signup-header h1 {
+    font-size: 2rem;
+  }
+} 

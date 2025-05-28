@@ -1,0 +1,124 @@
+:root {
+  /* Color palette */
+  --midnight-navy: #0D1B2A; 
+  --dark-blue: #1B263B;
+  --slate-blue: #415A77;
+  --slate-gray: #778DA9; 
+  --soft-white: #E0E1DD;
+  --light-teal: #3AC1B8;
+  --emerald-green: #0E9888;
+  
+  /* Font settings */
+  font-family: 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: var(--soft-white);
+  background-color: var(--midnight-navy);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Morphing background animation */
+.morphing-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, rgba(27, 38, 59, 0.5) 0%, rgba(13, 27, 42, 0) 50%);
+  background-size: 200% 200%;
+  animation: pulse 15s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* Static glowing background */
+.morphing-background::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(
+    circle at 70% 30%,
+    rgba(31, 171, 137, 0.08) 0%,
+    transparent 60%
+  );
+  filter: blur(60px);
+}
+
+/* Reset & Base Styles */
+html, 
+body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--soft-white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Simple solid background */
+body {
+  background: var(--midnight-navy);
+  position: relative;
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+} 

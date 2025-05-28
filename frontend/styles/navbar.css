@@ -1,0 +1,133 @@
+/* Navbar Styles */
+.navbar {
+  background-color: #0d1b2a;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  height: 100%;
+}
+
+.navbar-left {
+  padding-left: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-logo {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.nav-item {
+  margin: 0 20px;
+  white-space: nowrap;
+  background: none;
+}
+
+.nav-links {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: none !important;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  outline: none;
+  transition: none;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+.nav-auth {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-right: 30px;
+}
+
+.btn-login {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-signup {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-signup:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Add some top padding to the main content to account for fixed navbar */
+main {
+  padding-top: 70px;
+}
+
+/* Responsive styles for mobile nav menu */
+@media screen and (max-width: 960px) {
+  .nav-menu {
+    display: none;
+  }
+  
+  .navbar-container {
+    justify-content: space-between;
+  }
+} 
