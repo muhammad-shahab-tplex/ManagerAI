@@ -4,6 +4,13 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+// Display connection information (without password)
+console.log('Database connection info:');
+console.log(`Host: ${process.env.DB_HOST || 'localhost'}`);
+console.log(`Database: ${process.env.DB_NAME || 'managerai'}`);
+console.log(`User: ${process.env.DB_USER || 'postgres'}`);
+console.log(`Port: ${process.env.DB_PORT || '5432'}`);
+
 // Database connection configuration
 const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
@@ -27,6 +34,19 @@ const testConnection = async () => {
     client.release();
   } catch (error) {
     console.error('❌ Error connecting to PostgreSQL database:', error);
+    console.error('\nPossible solutions:');
+    console.error('1. Make sure PostgreSQL is installed and running');
+    console.error('2. Check that the database "managerai" exists');
+    console.error('3. Verify your username and password in the .env file');
+    console.error('4. Ensure PostgreSQL is listening on the specified port');
+    
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('\nFor local development:');
+      console.error('- Install PostgreSQL from https://www.postgresql.org/download/');
+      console.error('- Create a database named "managerai"');
+      console.error('- Update .env file with correct credentials');
+    }
+    
     process.exit(1); // Exit with failure
   }
 };

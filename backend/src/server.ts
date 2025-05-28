@@ -3,7 +3,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { testConnection } from './config/db';
-import initializeDatabase from './database/setup';
+import runMigrations from './database/migration';
 
 // Route files
 import authRoutes from './routes/auth';
@@ -40,9 +40,9 @@ const startServer = async () => {
     // Test database connection
     await testConnection();
 
-    // Initialize database if needed
-    if (process.env.INIT_DB === 'true') {
-      await initializeDatabase();
+    // Run database migrations if needed
+    if (process.env.RUN_MIGRATIONS === 'true') {
+      await runMigrations();
     }
 
     // Start server

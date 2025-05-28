@@ -1,22 +1,6 @@
-import express from 'express';
-import { Request as ExpressRequest, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-// Fix for Express route handler type issues
-declare module 'express' {
-  interface RequestHandler {
-    (req: Request, res: Response, next: NextFunction): any;
-  }
-  
-  interface Router {
-    get(path: string, ...handlers: Array<RequestHandler>): Router;
-    post(path: string, ...handlers: Array<RequestHandler>): Router;
-    put(path: string, ...handlers: Array<RequestHandler>): Router;
-    delete(path: string, ...handlers: Array<RequestHandler>): Router;
-    patch(path: string, ...handlers: Array<RequestHandler>): Router;
-  }
-}
-
-// User extension
+// Extend Express Request
 declare global {
   namespace Express {
     interface Request {
@@ -28,12 +12,15 @@ declare global {
   }
 }
 
-// Allow any return type from Express handlers
+// Fix Router method types
 declare module 'express-serve-static-core' {
-  interface RequestHandler {
-    (req: Request, res: Response, next: NextFunction): any;
+  interface Router {
+    get(path: string | RegExp, ...handlers: any[]): this;
+    post(path: string | RegExp, ...handlers: any[]): this;
+    put(path: string | RegExp, ...handlers: any[]): this;
+    delete(path: string | RegExp, ...handlers: any[]): this;
+    patch(path: string | RegExp, ...handlers: any[]): this;
   }
 }
 
-// This file is treated as a module if we export something
 export {}; 

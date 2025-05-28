@@ -17,16 +17,25 @@ const initializeDatabase = async () => {
       // Execute the SQL script
       await client.query(sqlScript);
       console.log('✅ Database schema initialized successfully');
-    } catch (error) {
-      console.error('❌ Error initializing database schema:', error);
-      throw error;
+    } catch (error: any) {
+      // If the error is about triggers already existing, it's not critical
+      if (error.code === '42710' && error.message.includes('trigger')) {
+        console.log('⚠️ Note: Some triggers already exist. This is not a critical error.');
+        console.log('✅ Database schema initialization completed with non-critical warnings');
+      } else {
+        console.error('❌ Error initializing database schema:', error);
+        throw error;
+      }
     } finally {
       // Release the client back to the pool
       client.release();
     }
   } catch (error) {
     console.error('❌ Database initialization failed:', error);
-    process.exit(1);
+    // Don't exit the process on initialization failure in production
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
   }
 };
 

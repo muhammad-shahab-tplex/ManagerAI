@@ -1,3 +1,6 @@
+-- Migration: 001_initial_schema.sql
+-- Description: Initial database schema with users, preferences, integrations, and tone profiles
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
@@ -48,54 +51,4 @@ CREATE TABLE IF NOT EXISTS tone_profiles (
   profile_data JSONB NOT NULL DEFAULT '[]',
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
--- Create trigger to automatically create user preference record
--- First, drop the trigger if it exists
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_create_user_preferences') THEN
-    DROP TRIGGER trigger_create_user_preferences ON users;
-  END IF;
-END $$;
-
--- Create or replace the function
-CREATE OR REPLACE FUNCTION create_user_preferences()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO user_preferences (user_id)
-  VALUES (NEW.id);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create the trigger
-CREATE TRIGGER trigger_create_user_preferences
-AFTER INSERT ON users
-FOR EACH ROW
-EXECUTE FUNCTION create_user_preferences();
-
--- Create trigger to automatically create tone profile record
--- First, drop the trigger if it exists
-DO $$
-BEGIN
-  IF EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'trigger_create_tone_profile') THEN
-    DROP TRIGGER trigger_create_tone_profile ON users;
-  END IF;
-END $$;
-
--- Create or replace the function
-CREATE OR REPLACE FUNCTION create_tone_profile()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO tone_profiles (user_id)
-  VALUES (NEW.id);
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create the trigger
-CREATE TRIGGER trigger_create_tone_profile
-AFTER INSERT ON users
-FOR EACH ROW
-EXECUTE FUNCTION create_tone_profile(); 
+); 

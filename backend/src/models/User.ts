@@ -190,7 +190,9 @@ class User {
    */
   static getSignedJwtToken(userId: number): string {
     const secretKey = process.env.JWT_SECRET || 'your_jwt_secret_change_in_production';
-    const signOptions: SignOptions = { expiresIn: process.env.JWT_EXPIRE || '30d' };
+    // Cast expiresIn to a type that works with the JWT SignOptions
+    const jwtExpire = process.env.JWT_EXPIRE || '30d';
+    const signOptions: SignOptions = { expiresIn: jwtExpire as any };
     
     // Use Buffer to handle the secret
     const secretBuffer = Buffer.from(secretKey, 'utf8');
