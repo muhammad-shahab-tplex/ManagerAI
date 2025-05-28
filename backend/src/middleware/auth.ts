@@ -1,27 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/User';
-
-interface JwtPayload {
-  id: string;
-}
+import User from '../models/User';
 
 /**
  * Protect routes - Verify JWT token and attach user to request
  */
-export const protect = async (req: Request, res: Response, next: NextFunction) => {
-  let token: string | undefined;
+export const protect = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+) => {
+  let token;
 
-  // Check if token exists in headers
+  // Get token from Authorization header
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     // Set token from Bearer token in header
     token = req.headers.authorization.split(' ')[1];
-  }
-  // If token not found in headers, check cookies
-  else if (req.cookies && req.cookies.token) {
+  } 
+  // Set token from cookie
+  else if (req.cookies.token) {
     token = req.cookies.token;
   }
 
@@ -35,22 +35,20 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
 
   try {
     // Verify token
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production'
-    ) as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret_change_in_production');
 
-    // Find user by id from decoded token
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
+    if (typeof decoded !== 'object' || !decoded.id) {
       return res.status(401).json({
         success: false,
-        message: 'User not found with this ID'
+        message: 'Invalid token'
       });
     }
 
-    req.user = user;
+    // Attach user to request
+    req.user = {
+      id: decoded.id
+    };
+
     next();
   } catch (err) {
     return res.status(401).json({
@@ -65,21 +63,31 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
  * @param {String[]} roles - Array of authorized roles
  */
 export const authorize = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user || !req.user.id) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized to access this route'
+        message: 'Not authorized'
       });
     }
     
-    if (!roles.includes(req.user.role)) {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Check if user role is included in authorized roles
+    if (!roles.includes(user.role)) {
       return res.status(403).json({
         success: false,
-        message: `User role ${req.user.role} is not authorized to access this route`
+        message: `User role '${user.role}' is not authorized to access this route`
       });
     }
-    
+
     next();
   };
 };

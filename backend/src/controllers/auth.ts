@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User, { IUser } from '../models/User';
+import User from '../models/User';
 import jwt from 'jsonwebtoken';
 
 interface RegisterRequestBody {
@@ -14,11 +14,17 @@ interface LoginRequestBody {
 }
 
 interface UserResponse {
-  id: string;
+  id: number;
   name: string;
   email: string;
   role: string;
-  subscriptionTier: string;
+  subscription_tier: string;
+}
+
+interface CookieOptions {
+  expires: Date;
+  httpOnly: boolean;
+  secure?: boolean;
 }
 
 /**
@@ -31,9 +37,9 @@ export const register = async (req: Request, res: Response) => {
     const { name, email, password }: RegisterRequestBody = req.body;
 
     // Check if user already exists
-    let user = await User.findOne({ email });
+    const existingUser = await User.findByEmail(email);
 
-    if (user) {
+    if (existingUser) {
       return res.status(400).json({
         success: false,
         message: 'User already exists'
@@ -41,11 +47,18 @@ export const register = async (req: Request, res: Response) => {
     }
 
     // Create user
-    user = await User.create({
+    const user = await User.create({
       name,
       email,
       password
     });
+
+    if (!user) {
+      return res.status(500).json({
+        success: false,
+        message: 'Error creating user'
+      });
+    }
 
     sendTokenResponse(user, 201, res);
   } catch (err) {
@@ -75,7 +88,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findByEmail(email);
 
     if (!user) {
       return res.status(401).json({
@@ -85,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Check if password matches
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await User.matchPassword(password, user.password || '');
 
     if (!isMatch) {
       return res.status(401).json({
@@ -111,7 +124,21 @@ export const login = async (req: Request, res: Response) => {
  */
 export const getMe = async (req: Request, res: Response) => {
   try {
-    const user = await User.findById(req.user!.id);
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized'
+      });
+    }
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -146,11 +173,11 @@ export const logout = (req: Request, res: Response) => {
 /**
  * Get token from model, create cookie and send response
  */
-const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
+const sendTokenResponse = (user: any, statusCode: number, res: Response) => {
   // Create token
-  const token = user.getSignedJwtToken();
+  const token = User.getSignedJwtToken(user.id);
 
-  const options = {
+  const options: CookieOptions = {
     expires: new Date(
       Date.now() + Number(process.env.JWT_COOKIE_EXPIRE || 30) * 24 * 60 * 60 * 1000
     ),
@@ -163,11 +190,11 @@ const sendTokenResponse = (user: IUser, statusCode: number, res: Response) => {
   }
 
   const userResponse: UserResponse = {
-    id: user._id,
+    id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,
-    subscriptionTier: user.subscriptionTier
+    subscription_tier: user.subscription_tier
   };
 
   res

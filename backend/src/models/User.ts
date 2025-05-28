@@ -1,183 +1,213 @@
-import mongoose, { Document, Schema, Model } from 'mongoose';
+import { pool } from '../config/db';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 
-interface IWorkingHours {
-  start: string;
-  end: string;
-}
-
-interface IPreferences {
-  emailFrequency: 'realtime' | 'hourly' | 'daily';
-  autoReplyEnabled: boolean;
-  autoReplyConfidenceThreshold: number;
-  workingHours: IWorkingHours;
-  timezone: string;
-}
-
-interface ITokens {
-  access?: string;
-  refresh?: string;
-  expiry?: Date;
-}
-
-interface IIntegrationConfig {
-  connected: boolean;
-  tokens: ITokens;
-}
-
-interface IIntegrations {
-  google: IIntegrationConfig;
-  microsoft: IIntegrationConfig;
-}
-
-export interface IUser extends Document {
+export interface IUser {
+  id: number;
   name: string;
   email: string;
-  password: string;
-  role: 'user' | 'admin';
-  subscriptionTier: 'free' | 'pro' | 'elite';
-  googleId?: string;
-  microsoftId?: string;
-  preferences: IPreferences;
-  integrations: IIntegrations;
-  toneProfile: any[];
-  resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
-  createdAt: Date;
-  getSignedJwtToken(): string;
-  matchPassword(enteredPassword: string): Promise<boolean>;
+  password?: string;
+  role: string;
+  subscription_tier: string;
+  google_id?: string;
+  microsoft_id?: string;
+  reset_password_token?: string;
+  reset_password_expire?: Date;
+  created_at: Date;
 }
 
-const UserSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Please add a name'],
-    trim: true,
-    maxlength: [50, 'Name cannot be more than 50 characters']
-  },
-  email: {
-    type: String,
-    required: [true, 'Please add an email'],
-    unique: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      'Please add a valid email'
-    ]
-  },
-  password: {
-    type: String,
-    required: [true, 'Please add a password'],
-    minlength: [6, 'Password must be at least 6 characters'],
-    select: false
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  subscriptionTier: {
-    type: String,
-    enum: ['free', 'pro', 'elite'],
-    default: 'free'
-  },
-  googleId: {
-    type: String
-  },
-  microsoftId: {
-    type: String
-  },
-  preferences: {
-    emailFrequency: {
-      type: String,
-      enum: ['realtime', 'hourly', 'daily'],
-      default: 'daily'
-    },
-    autoReplyEnabled: {
-      type: Boolean,
-      default: false
-    },
-    autoReplyConfidenceThreshold: {
-      type: Number,
-      default: 0.85
-    },
-    workingHours: {
-      start: {
-        type: String,
-        default: '09:00'
-      },
-      end: {
-        type: String,
-        default: '17:00'
+export interface IUserPreferences {
+  id: number;
+  user_id: number;
+  email_frequency: string;
+  auto_reply_enabled: boolean;
+  auto_reply_confidence_threshold: number;
+  working_hours_start: string;
+  working_hours_end: string;
+  timezone: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface IIntegrationToken {
+  id: number;
+  user_id: number;
+  provider: string;
+  connected: boolean;
+  access_token?: string;
+  refresh_token?: string;
+  expiry_date?: Date;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface IToneProfile {
+  id: number;
+  user_id: number;
+  profile_data: any[];
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface IUserComplete extends IUser {
+  preferences?: IUserPreferences;
+  integrations?: {
+    google?: IIntegrationToken;
+    microsoft?: IIntegrationToken;
+  };
+  tone_profile?: IToneProfile;
+}
+
+class User {
+  /**
+   * Find a user by ID
+   */
+  static async findById(id: number): Promise<IUserComplete | null> {
+    try {
+      // Get user
+      const userResult = await pool.query(
+        'SELECT * FROM users WHERE id = $1', 
+        [id]
+      );
+      
+      if (userResult.rows.length === 0) {
+        return null;
       }
-    },
-    timezone: {
-      type: String,
-      default: 'UTC'
+      
+      const user = userResult.rows[0];
+      
+      // Get user preferences
+      const preferencesResult = await pool.query(
+        'SELECT * FROM user_preferences WHERE user_id = $1',
+        [id]
+      );
+      
+      // Get integrations
+      const integrationsResult = await pool.query(
+        'SELECT * FROM integration_tokens WHERE user_id = $1',
+        [id]
+      );
+      
+      // Get tone profile
+      const toneProfileResult = await pool.query(
+        'SELECT * FROM tone_profiles WHERE user_id = $1',
+        [id]
+      );
+      
+      // Build complete user object
+      const userComplete: IUserComplete = {
+        ...user,
+        preferences: preferencesResult.rows[0] || undefined,
+        integrations: {
+          google: integrationsResult.rows.find(i => i.provider === 'google'),
+          microsoft: integrationsResult.rows.find(i => i.provider === 'microsoft')
+        },
+        tone_profile: toneProfileResult.rows[0] || undefined
+      };
+      
+      return userComplete;
+    } catch (error) {
+      console.error('Error finding user by ID:', error);
+      return null;
     }
-  },
-  integrations: {
-    google: {
-      connected: {
-        type: Boolean,
-        default: false
-      },
-      tokens: {
-        access: String,
-        refresh: String,
-        expiry: Date
-      }
-    },
-    microsoft: {
-      connected: {
-        type: Boolean,
-        default: false
-      },
-      tokens: {
-        access: String,
-        refresh: String,
-        expiry: Date
-      }
-    }
-  },
-  toneProfile: {
-    type: Array,
-    default: []
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
-});
-
-// Encrypt password using bcrypt
-UserSchema.pre<IUser>('save', async function(next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
-
-// Sign JWT and return
-UserSchema.methods.getSignedJwtToken = function(this: IUser): string {
-  return jwt.sign(
-    { id: this._id },
-    process.env.JWT_SECRET || 'your_jwt_secret_key_change_in_production',
-    {
-      expiresIn: process.env.JWT_EXPIRE || '30d'
+  
+  /**
+   * Find a user by email
+   */
+  static async findByEmail(email: string): Promise<IUserComplete | null> {
+    try {
+      const result = await pool.query(
+        'SELECT * FROM users WHERE email = $1', 
+        [email]
+      );
+      
+      if (result.rows.length === 0) {
+        return null;
+      }
+      
+      // Get user ID
+      const userId = result.rows[0].id;
+      
+      // Use findById to get complete user data
+      return await this.findById(userId);
+    } catch (error) {
+      console.error('Error finding user by email:', error);
+      return null;
     }
-  );
-};
-
-// Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function(this: IUser, enteredPassword: string): Promise<boolean> {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-const User: Model<IUser> = mongoose.model<IUser>('User', UserSchema);
+  }
+  
+  /**
+   * Create a new user
+   */
+  static async create(userData: { 
+    name: string; 
+    email: string; 
+    password: string;
+    role?: string;
+    subscription_tier?: string;
+  }): Promise<IUserComplete | null> {
+    const client = await pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+      
+      // Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(userData.password, salt);
+      
+      // Insert user
+      const userResult = await client.query(
+        `INSERT INTO users (
+          name, email, password, role, subscription_tier
+        ) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [
+          userData.name,
+          userData.email,
+          hashedPassword,
+          userData.role || 'user',
+          userData.subscription_tier || 'free'
+        ]
+      );
+      
+      // The triggers will automatically create related records
+      
+      await client.query('COMMIT');
+      
+      // Get the complete user
+      return await this.findById(userResult.rows[0].id);
+    } catch (error) {
+      await client.query('ROLLBACK');
+      console.error('Error creating user:', error);
+      return null;
+    } finally {
+      client.release();
+    }
+  }
+  
+  /**
+   * Generate a signed JWT token
+   */
+  static getSignedJwtToken(userId: number): string {
+    const secretKey = process.env.JWT_SECRET || 'your_jwt_secret_change_in_production';
+    const signOptions: SignOptions = { expiresIn: process.env.JWT_EXPIRE || '30d' };
+    
+    // Use Buffer to handle the secret
+    const secretBuffer = Buffer.from(secretKey, 'utf8');
+    
+    return jwt.sign(
+      { id: userId },
+      secretBuffer,
+      signOptions
+    );
+  }
+  
+  /**
+   * Match user entered password to hashed password in database
+   */
+  static async matchPassword(enteredPassword: string, hashedPassword: string): Promise<boolean> {
+    return await bcrypt.compare(enteredPassword, hashedPassword);
+  }
+}
 
 export default User; 
