@@ -424,20 +424,19 @@ body {
 
 /* CTA Section */
 .cta-section {
-  background: linear-gradient(135deg, 
-    rgba(13, 27, 42, 0.7), 
-    rgba(27, 38, 59, 0.7)
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: var(--soft-white);
-  padding: 80px 24px;
   text-align: center;
-  width: 100%;
+  background: linear-gradient(145deg, rgba(13, 27, 42, 0.8), rgba(20, 36, 58, 0.8));
+  border-radius: 12px;
+  padding: 60px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px 2px rgba(65, 90, 119, 0.3);
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  color: var(--soft-white);
   overflow: hidden;
 }
 
+/* Keep the existing before pseudo-element for background effect */
 .cta-section::before {
   content: '';
   position: absolute;
@@ -455,8 +454,8 @@ body {
 }
 
 .cta-section h2 {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+  font-size: 2.2rem;
+  margin-bottom: 15px;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
@@ -464,12 +463,32 @@ body {
 }
 
 .cta-section p {
-  font-size: 1.2rem;
-  margin-bottom: 32px;
-  max-width: 700px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  color: var(--slate-gray);
+}
+
+/* Updated CTA button to match testimonials */
+.cta-section .btn-primary {
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  background-color: #415A77;
+  box-shadow: 0 4px 15px rgba(13, 27, 42, 0.3);
+  letter-spacing: 0.5px;
+  margin-top: 10px;
+}
+
+.cta-section .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(13, 27, 42, 0.4);
 }
 
 /* Premium Features Section */

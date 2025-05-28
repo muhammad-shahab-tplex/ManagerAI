@@ -94,7 +94,9 @@ const Home: React.FC = () => {
 
       <section className="cta-section">
         <h2>Ready to Win Back 10+ Hours Every Week?</h2>
-        <p>Join thousands of executives and founders who trust YourManager with their productivity.</p>
+        <p>
+          Join thousands of executives and founders who trust YourManager with their productivity.
+        </p>
         <Link href="/signup">
           <button className="btn-primary">Start Your Free Trial</button>
         </Link>
