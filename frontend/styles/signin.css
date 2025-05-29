@@ -1,20 +1,24 @@
 /* SignIn Page Styles */
 .signin-page {
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 4rem 2rem;
   color: var(--soft-white);
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .logo-position {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: 0;
+  left: 0;
+  right: auto;
   z-index: 10;
+  padding: 0.5rem;
 }
 
 .logo-wrapper {
@@ -25,15 +29,19 @@
 }
 
 .logo-wrapper .logo-text {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--soft-white);
-  letter-spacing: 0.5px;
+  display: none;
 }
 
 .signin-content {
   max-width: 420px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
+  padding-bottom: 2rem;
+  margin-top: -5rem;
 }
 
 .signin-header {
@@ -243,8 +251,13 @@
 
 /* Responsive styles */
 @media (max-width: 640px) {
+  .signin-page {
+    padding: 5rem 1rem 3rem;
+  }
+  
   .signin-content {
     max-width: 100%;
+    margin: 1rem auto;
   }
   
   .oauth-options {

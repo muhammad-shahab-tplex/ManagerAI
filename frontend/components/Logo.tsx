@@ -21,6 +21,8 @@ const Logo: React.FC<LogoProps> = ({ size = 40 }) => {
           display: flex;
           align-items: center;
           justify-content: center;
+          position: relative;
+          z-index: 100;
         }
         
         .logo-circle {

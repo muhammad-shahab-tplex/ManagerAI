@@ -38,14 +38,11 @@ const SignUpPage: React.FC = () => {
       </Head>
 
       <div className="signup-page">
-        <div className="logo-position">
-          <Link href="/">
-            <div className="logo-wrapper">
-              <Logo size={32} />
-              <span className="logo-text">YOUR MANAGER</span>
-            </div>
-          </Link>
-        </div>
+        <Link href="/" className="logo-link">
+          <div className="logo-wrapper" style={{ position: 'fixed', top: '5px', left: '5px', zIndex: 1000 }}>
+            <Logo size={32} />
+          </div>
+        </Link>
         
         <div className="signup-content">
           <div className="signup-header">
@@ -110,7 +107,7 @@ const SignUpPage: React.FC = () => {
           </div>
 
           <div className="oauth-options">
-            <button className="oauth-button google-button">
+            <button className="oauth-button">
               <svg className="google-icon" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285f4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34a853"/>
