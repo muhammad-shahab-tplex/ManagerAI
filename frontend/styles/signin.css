@@ -229,14 +229,14 @@
 }
 
 .signup-link {
-  color: var(--light-teal);
-  font-weight: 500;
+  color: var(--emerald-green);
+  font-weight: 600;
   cursor: pointer;
   transition: color 0.15s ease;
 }
 
 .signup-link:hover {
-  color: var(--emerald-green);
+  color: var(--light-teal);
   text-decoration: underline;
 }
 
@@ -247,6 +247,22 @@
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
   border-radius: 0.25rem;
+}
+
+.create-account-button {
+  background: linear-gradient(135deg, var(--light-teal), var(--emerald-green));
+  color: var(--midnight-navy);
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.create-account-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31, 171, 137, 0.3);
 }
 
 /* Responsive styles */

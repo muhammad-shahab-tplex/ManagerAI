@@ -55,23 +55,23 @@ const TestimonialsPage: React.FC = () => {
         <meta name="description" content="See what our customers say about YourManager - AI Chief-of-Staff" />
       </Head>
 
-      <div className="container">
-        <div className="header">
-          <h1>What Our Customers Say</h1>
-          <p>Hear from executives and founders who have transformed their productivity with YourManager</p>
+      <div className="testimonial-page-container">
+        <div className="testimonial-header">
+          <h1 className="testimonial-header-title">What Our Customers Say</h1>
+          <p className="testimonial-header-description">Hear from executives and founders who have transformed their productivity with YourManager</p>
         </div>
 
-        <div className="testimonials-grid">
+        <div className="testimonial-grid">
           {testimonials.map((testimonial) => (
             <div className="testimonial-card" key={testimonial.id}>
               <div className="testimonial-content">
-                <blockquote>"{testimonial.quote}"</blockquote>
+                <blockquote className="testimonial-quote">"{testimonial.quote}"</blockquote>
               </div>
               <div className="testimonial-author">
-                <div className="author-image">
+                <div className="testimonial-author-image">
                   <img src={testimonial.image} alt={testimonial.name} />
                 </div>
-                <div className="author-info">
+                <div className="testimonial-author-info">
                   <h3>{testimonial.name}</h3>
                   <p>{testimonial.position}</p>
                 </div>
@@ -80,11 +80,11 @@ const TestimonialsPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="cta-section">
-          <h2>Ready to Win Back 10+ Hours Every Week?</h2>
-          <p>Join thousands of executives and founders who trust YourManager with their productivity.</p>
+        <div className="testimonial-cta-section">
+          <h2 className="testimonial-cta-title">Ready to Win Back 10+ Hours Every Week?</h2>
+          <p className="testimonial-cta-text">Join thousands of executives and founders who trust YourManager with their productivity.</p>
           <Link href="/signup">
-            <button className="btn-primary">Start Your Free Trial</button>
+            <button className="testimonial-cta-button">Start Your Free Trial</button>
           </Link>
         </div>
       </div>

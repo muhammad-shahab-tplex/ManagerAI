@@ -1,28 +1,120 @@
+/* Global Variables */
 :root {
-  /* Color palette */
-  --midnight-navy: #0D1B2A; 
+  --midnight-navy: #0D1B2A;
   --dark-blue: #1B263B;
-  --slate-blue: #415A77;
-  --slate-gray: #778DA9; 
+  --steel-blue: #415A77;
+  --slate-gray: #778DA9;
   --soft-white: #E0E1DD;
+  --emerald-green: #1FAB89;
   --light-teal: #3AC1B8;
-  --emerald-green: #0E9888;
-  
-  /* Font settings */
-  font-family: 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  font-weight: 400;
+  --warm-gold: #FFD700;
+}
 
-  color-scheme: dark;
-  color: var(--soft-white);
+/* Global Styles */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background-color: var(--midnight-navy);
+  color: var(--soft-white);
+  min-height: 100vh;
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--emerald-green);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--slate-gray);
+}
+
+/* Morphing Background Effect */
+.morphing-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--midnight-navy);
+  z-index: -100;
+  overflow: hidden;
+}
+
+.morphing-background::before,
+.morphing-background::after {
+  content: '';
+  position: absolute;
+  width: 300%;
+  height: 300%;
+  top: -100%;
+  left: -100%;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(27, 38, 59, 0.6) 0%, transparent 50%);
+  animation: rotate 60s infinite linear;
+}
+
+.morphing-background::after {
+  background: radial-gradient(circle, rgba(65, 90, 119, 0.4) 0%, transparent 40%);
+  animation: rotate 120s infinite linear reverse;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Make the main content take full height */
+main {
+  min-height: calc(100vh - 160px);
+}
+
+/* Container for pages without their own module */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Page Headers */
+.page-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.page-description {
+  font-size: 1.1rem;
+  color: var(--slate-gray);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Button Default Styles */
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button:focus {
+  outline: none;
 }
 
 * {
@@ -43,57 +135,6 @@ body {
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   line-height: 1.2;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
-}
-
-/* Morphing background animation */
-.morphing-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: radial-gradient(circle at 50% 50%, rgba(27, 38, 59, 0.5) 0%, rgba(13, 27, 42, 0) 50%);
-  background-size: 200% 200%;
-  animation: pulse 15s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-
-/* Static glowing background */
-.morphing-background::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: radial-gradient(
-    circle at 70% 30%,
-    rgba(31, 171, 137, 0.08) 0%,
-    transparent 60%
-  );
-  filter: blur(60px);
 }
 
 /* Reset & Base Styles */
