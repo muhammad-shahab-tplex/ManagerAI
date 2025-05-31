@@ -78,6 +78,7 @@ a:hover {
 /* Make the main content take full height */
 main {
   min-height: calc(100vh - 160px);
+  animation: fadeIn 0.4s ease-in-out;
 }
 
 /* Container for pages without their own module */
@@ -162,4 +163,14 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+/* Common animation for page elements */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 } 

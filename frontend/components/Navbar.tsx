@@ -45,10 +45,10 @@ const Navbar: React.FC = () => {
           </li>
         </ul>
         <div className="nav-auth">
-          <Link href="/login">
-            <button className="btn-login">Login</button>
+          <Link href="/signin">
+            <button className="btn-login">Sign in</button>
           </Link>
-          <Link href="/get-started">
+          <Link href="/signup">
             <button className="btn-signup">Get Started</button>
           </Link>
         </div>

@@ -2,6 +2,28 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
+import { motion } from 'framer-motion';
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: {
+      duration: 0.6
+    }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
 
 const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,9 +31,15 @@ const SignUpPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!agreedToTerms) {
+      setError('You must agree to the Terms and Privacy Policy to continue.');
+      return;
+    }
     
     setError('');
     setIsLoading(true);
@@ -37,23 +65,45 @@ const SignUpPage: React.FC = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
       </Head>
 
-      <div className="signup-page">
+      <motion.div 
+        className="signup-page"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
         <Link href="/" className="logo-link">
-          <div className="logo-wrapper" style={{ position: 'fixed', top: '5px', left: '5px', zIndex: 1000 }}>
+          <motion.div 
+            className="logo-wrapper" 
+            style={{ position: 'fixed', top: '5px', left: '5px', zIndex: 1000 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             <Logo size={32} />
-          </div>
+          </motion.div>
         </Link>
         
-        <div className="signup-content">
-          <div className="signup-header">
+        <motion.div 
+          className="signup-content"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div className="signup-header" variants={fadeIn}>
             <h1>Get Started</h1>
             <p>Create your account and start your productivity journey</p>
-          </div>
+          </motion.div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && <motion.div className="error-message" variants={fadeIn}>{error}</motion.div>}
 
-          <form onSubmit={handleSubmit} className="signup-form">
-            <div className="form-group">
+          <motion.form 
+            onSubmit={handleSubmit} 
+            className="signup-form"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div className="form-group" variants={fadeIn}>
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -63,9 +113,9 @@ const SignUpPage: React.FC = () => {
                 placeholder="you@example.com"
                 required
               />
-            </div>
+            </motion.div>
 
-            <div className="form-group">
+            <motion.div className="form-group" variants={fadeIn}>
               <label htmlFor="verificationCode">Verification Code</label>
               <input
                 type="text"
@@ -75,9 +125,9 @@ const SignUpPage: React.FC = () => {
                 placeholder="Enter verification code"
                 required
               />
-            </div>
+            </motion.div>
 
-            <div className="form-group">
+            <motion.div className="form-group" variants={fadeIn}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -87,27 +137,45 @@ const SignUpPage: React.FC = () => {
                 placeholder="Create a password"
                 required
               />
-            </div>
+            </motion.div>
 
-            <div className="terms-agreement">
-              <p>By signing up, you agree to our <Link href="/terms"><span className="terms-link">Terms</span></Link> and <Link href="/privacy"><span className="terms-link">Privacy Policy</span></Link></p>
-            </div>
+            <motion.div className="terms-agreement" variants={fadeIn}>
+              <div className="terms-checkbox-container">
+                <input
+                  type="checkbox"
+                  id="agreeToTerms"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="terms-checkbox"
+                />
+                <label htmlFor="agreeToTerms">
+                  I agree to the <Link href="/terms"><span className="terms-link">Terms</span></Link> and <Link href="/privacy"><span className="terms-link">Privacy Policy</span></Link> of ScamLock's
+                </label>
+              </div>
+            </motion.div>
 
-            <button 
+            <motion.button 
               type="submit" 
               className={`signup-button ${isLoading ? 'loading' : ''}`}
               disabled={isLoading}
+              variants={fadeIn}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               {isLoading ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
-          <div className="or-continue">
+          <motion.div className="or-continue" variants={fadeIn}>
             Or continue with
-          </div>
+          </motion.div>
 
-          <div className="oauth-options">
-            <button className="oauth-button">
+          <motion.div className="oauth-options" variants={fadeIn}>
+            <motion.button 
+              className="oauth-button"
+              whileHover={{ scale: 1.02, backgroundColor: 'rgba(27, 38, 59, 0.9)' }}
+              whileTap={{ scale: 0.98 }}
+            >
               <svg className="google-icon" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285f4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34a853"/>
@@ -115,14 +183,14 @@ const SignUpPage: React.FC = () => {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#ea4335"/>
               </svg>
               <span>Google</span>
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
 
-          <div className="signin-option">
+          <motion.div className="signin-option" variants={fadeIn}>
             <p>Already have an account? <Link href="/signin"><span className="signin-link">Sign in</span></Link></p>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </>
   );
 };

@@ -95,6 +95,17 @@
   transition: border-color 0.15s ease;
 }
 
+/* Override browser autofill styles */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px rgba(13, 27, 42, 0.7) inset !important;
+  -webkit-text-fill-color: var(--soft-white) !important;
+  caret-color: var(--soft-white);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .form-group input:focus {
   outline: none;
   border-color: var(--light-teal);
@@ -123,11 +134,39 @@
   width: 1rem;
   height: 1rem;
   accent-color: var(--light-teal);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  appearance: none;
+  background-color: rgba(13, 27, 42, 0.7);
+  border: 1px solid var(--slate-gray);
+  border-radius: 3px;
+}
+
+.remember-me input[type="checkbox"]:checked {
+  background-color: var(--light-teal);
+  border-color: var(--light-teal);
+}
+
+.remember-me input[type="checkbox"]:checked::before {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  color: var(--midnight-navy);
+}
+
+.remember-me input[type="checkbox"]:hover {
+  border-color: var(--light-teal);
+  box-shadow: 0 0 0 2px rgba(58, 193, 184, 0.2);
 }
 
 .remember-me label {
   color: var(--slate-gray);
   font-size: 0.85rem;
+  cursor: pointer;
 }
 
 .forgot-password {
@@ -143,19 +182,24 @@
 }
 
 .signin-button {
+  background: transparent;
+  border: 2px solid var(--slate-gray);
+  color: var(--soft-white);
   padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, var(--light-teal), var(--emerald-green));
-  color: var(--midnight-navy);
-  border: none;
-  border-radius: 0.375rem;
+  border-radius: 30px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-align: center;
+  width: 100%;
 }
 
 .signin-button:hover {
+  background: rgba(119, 141, 169, 0.15);
   transform: translateY(-2px);
+  border-color: var(--slate-gray);
 }
 
 .signin-button.loading {

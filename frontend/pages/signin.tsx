@@ -2,6 +2,28 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
+import { motion } from 'framer-motion';
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: {
+      duration: 0.6
+    }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
 
 const SignInPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -62,23 +84,45 @@ const SignInPage: React.FC = () => {
         <meta name="description" content="Sign in to your YourManager account - AI Chief-of-Staff that saves you 10+ hours per week" />
       </Head>
 
-      <div className="signin-page">
+      <motion.div 
+        className="signin-page"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+      >
         <Link href="/" className="logo-link">
-          <div className="logo-wrapper" style={{ position: 'fixed', top: '5px', left: '5px', zIndex: 1000 }}>
+          <motion.div 
+            className="logo-wrapper" 
+            style={{ position: 'fixed', top: '5px', left: '5px', zIndex: 1000 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             <Logo size={40} />
-          </div>
+          </motion.div>
         </Link>
         
-        <div className="signin-content">
-          <div className="signin-header">
+        <motion.div 
+          className="signin-content"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div className="signin-header" variants={fadeIn}>
             <h1>Welcome Back</h1>
             <p>Sign in to your account to continue your productivity journey</p>
-          </div>
+          </motion.div>
 
           {error && <div className="error-message">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="signin-form">
-            <div className="form-group">
+          <motion.form 
+            onSubmit={handleSubmit} 
+            className="signin-form"
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div className="form-group" variants={fadeIn}>
               <label htmlFor="email">Email</label>
               <input
                 type="email"
@@ -88,9 +132,9 @@ const SignInPage: React.FC = () => {
                 placeholder="you@example.com"
                 required
               />
-            </div>
+            </motion.div>
 
-            <div className="form-group">
+            <motion.div className="form-group" variants={fadeIn}>
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -100,9 +144,9 @@ const SignInPage: React.FC = () => {
                 placeholder="Enter your password"
                 required
               />
-            </div>
+            </motion.div>
 
-            <div className="form-options">
+            <motion.div className="form-options" variants={fadeIn}>
               <div className="remember-me">
                 <input
                   type="checkbox"
@@ -115,35 +159,43 @@ const SignInPage: React.FC = () => {
               <Link href="/forgot-password">
                 <span className="forgot-password">Forgot password?</span>
               </Link>
-            </div>
+            </motion.div>
 
-            <button 
+            <motion.button 
               type="submit" 
               className={`signin-button ${isLoading ? 'loading' : ''}`}
               disabled={isLoading}
+              variants={fadeIn}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
-          <div className="divider">
+          <motion.div className="divider" variants={fadeIn}>
             <span>Or continue with</span>
-          </div>
+          </motion.div>
 
-          <div className="oauth-options">
+          <motion.div className="oauth-options" variants={fadeIn}>
             {oauthProviders.map((provider, index) => (
-              <button key={index} className="oauth-button">
+              <motion.button 
+                key={index} 
+                className="oauth-button"
+                whileHover={{ scale: 1.02, backgroundColor: 'rgba(27, 38, 59, 0.9)' }}
+                whileTap={{ scale: 0.98 }}
+              >
                 <span className="oauth-icon">{provider.icon}</span>
                 <span>{provider.name}</span>
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
 
-          <div className="signup-option">
+          <motion.div className="signup-option" variants={fadeIn}>
             <p>Don't have an account? <Link href="/signup"><span className="signup-link">Sign up</span></Link></p>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </>
   );
 };

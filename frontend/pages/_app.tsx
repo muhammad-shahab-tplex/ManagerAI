@@ -14,7 +14,9 @@ import '../styles/signup.css';
 import '../styles/roadmap.css';
 import '../styles/features.css';
 import '../styles/pricing.css';
+import '../styles/transitions.css';
 import { useRouter } from 'next/router';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -36,15 +38,44 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [isAuthPage]);
   
+  // Page transition variants
+  const pageVariants = {
+    initial: {
+      opacity: 0
+    },
+    in: {
+      opacity: 1
+    },
+    out: {
+      opacity: 0
+    }
+  };
+  
+  // Page transition settings
+  const pageTransition = {
+    type: "tween",
+    ease: "easeInOut",
+    duration: 0.4
+  };
+  
   return (
     <>
       {/* Simple morphing background */}
       <div className="morphing-background"></div>
       
       {!isAuthPage && <Navbar />}
-      <main>
-        <Component {...pageProps} />
-      </main>
+      <AnimatePresence mode="wait">
+        <motion.main
+          key={router.route}
+          initial="initial"
+          animate="in"
+          exit="out"
+          variants={pageVariants}
+          transition={pageTransition}
+        >
+          <Component {...pageProps} />
+        </motion.main>
+      </AnimatePresence>
       {!isAuthPage && <Footer />}
     </>
   );
