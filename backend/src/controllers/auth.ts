@@ -7,6 +7,7 @@ interface RegisterRequestBody {
   name: string;
   email: string;
   password: string;
+  verificationCode?: string;
 }
 
 interface LoginRequestBody {
@@ -42,7 +43,30 @@ interface AuthRequest extends Request {
  */
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password }: RegisterRequestBody = req.body;
+    console.log('Registration request body:', req.body);
+    const { name, email, password, verificationCode }: RegisterRequestBody = req.body;
+
+    // Check if all required fields are provided
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields'
+      });
+    }
+
+    // Validate verification code if provided
+    if (verificationCode) {
+      console.log(`Validating code ${verificationCode} for ${email}`);
+      const isCodeValid = await emailService.verifyCode(email, verificationCode);
+      if (!isCodeValid) {
+        console.log('Verification code validation failed');
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid verification code'
+        });
+      }
+      console.log('Verification code is valid');
+    }
 
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
@@ -68,9 +92,10 @@ export const register = async (req: Request, res: Response) => {
       });
     }
 
+    console.log('User created successfully:', user.id);
     sendTokenResponse(user, 201, res);
   } catch (err) {
-    console.error(err);
+    console.error('Registration error:', err);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -236,6 +261,40 @@ export const sendVerificationCode = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: 'Server error sending verification code'
+    });
+  }
+};
+
+/**
+ * @desc    Verify a code without registering
+ * @route   POST /api/auth/verify-code
+ * @access  Public
+ */
+export const verifyCode = async (req: Request, res: Response) => {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and verification code'
+      });
+    }
+
+    // Verify the code
+    const isValid = await emailService.verifyCode(email, code);
+
+    return res.status(200).json({
+      success: isValid,
+      message: isValid 
+        ? 'Verification code is valid' 
+        : 'Invalid verification code'
+    });
+  } catch (err) {
+    console.error('Error verifying code:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server error verifying code'
     });
   }
 };

@@ -26,6 +26,134 @@ const staggerContainer = {
   }
 };
 
+// Animation variants for the checkmark
+const circleVariants = {
+  hidden: { 
+    scale: 0,
+    opacity: 0
+  },
+  visible: { 
+    scale: 1,
+    opacity: 1,
+    transition: { 
+      duration: 0.4,
+      ease: "easeOut" 
+    }
+  }
+};
+
+const checkVariants = {
+  hidden: { 
+    pathLength: 0,
+    opacity: 0
+  },
+  visible: { 
+    pathLength: 1,
+    opacity: 1,
+    transition: { 
+      delay: 0.2,
+      duration: 0.4,
+      ease: "easeInOut"
+    }
+  }
+};
+
+// Card variants for the success animation
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    y: 20
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: "easeOut"
+    }
+  }
+};
+
+// Text variants for smooth fade-in
+const textVariants = {
+  hidden: {
+    opacity: 0,
+    y: 10
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      delay: 0.2,
+      ease: "easeOut"
+    }
+  }
+};
+
+// Animation styles with card design
+const successAnimationStyle = {
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backdropFilter: 'blur(2px)',
+    WebkitBackdropFilter: 'blur(2px)'
+  } as React.CSSProperties,
+  card: {
+    backgroundColor: 'rgba(26, 36, 56, 0.7)',
+    borderRadius: '20px',
+    padding: '25px 30px',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.25), 0 0 10px rgba(255, 255, 255, 0.05)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: '300px',
+    position: 'relative',
+    border: 'none',
+    overflow: 'hidden',
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)'
+  } as React.CSSProperties,
+  svgContainer: {
+    margin: '15px 0',
+    position: 'relative'
+  } as React.CSSProperties,
+  title: {
+    color: 'white',
+    fontSize: '20px',
+    fontWeight: 'bold',
+    marginBottom: '15px',
+    textAlign: 'center',
+    textShadow: '0 1px 3px rgba(0,0,0,0.3)'
+  } as React.CSSProperties,
+  message: {
+    color: 'rgba(240, 240, 240, 0.9)',
+    fontSize: '16px',
+    textAlign: 'center',
+    marginTop: '15px'
+  } as React.CSSProperties,
+  glow: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 70%)',
+    top: 0,
+    left: 0,
+    zIndex: -1
+  } as React.CSSProperties
+};
+
 const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
@@ -35,6 +163,9 @@ const SignUpPage: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [successTitle, setSuccessTitle] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,20 +175,61 @@ const SignUpPage: React.FC = () => {
       return;
     }
     
+    if (!email || !password || !verificationCode) {
+      setError('Please fill in all required fields.');
+      return;
+    }
+    
     setError('');
     setIsLoading(true);
     
     try {
-      // In a real app, you would call your registration API here
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Then, call the registration API directly
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/register`;
       
-      // For demo purposes, we'll just redirect to a dashboard page
-      window.location.href = '/dashboard';
-    } catch (err) {
-      setError('An error occurred during registration. Please try again.');
+      const response = await axios.post(apiUrl, {
+        name: email.split('@')[0], // Using part of email as name
+        email,
+        password,
+        verificationCode
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        withCredentials: true
+      });
+      
+      console.log('Registration response:', response.data);
+      
+      if (response.data.success) {
+        // Store user data and token in localStorage for persistence
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('token', response.data.token);
+        
+        // Set success messages
+        setSuccessTitle(`Welcome, ${response.data.user?.name || 'User'}!`);
+        setSuccessMessage('Your account has been created successfully. Redirecting to dashboard...');
+        
+        // Show success animation before redirecting
+        setShowSuccessAnimation(true);
+        // Redirect happens after animation completes via handleAnimationComplete
+      } else {
+        setError(response.data.message || 'Registration failed. Please try again.');
+      }
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || 'An error occurred during registration. Please try again.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleAnimationComplete = () => {
+    // Wait a bit after animation completes for better UX
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 300);
   };
 
   const handleSendCode = async () => {
@@ -82,14 +254,6 @@ const SignUpPage: React.FC = () => {
       const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/send-verification-code`;
       console.log('API URL:', apiUrl);
       
-      // First test if the API is reachable
-      try {
-        const testResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/test`);
-        console.log('Test API response:', testResponse.data);
-      } catch (testErr) {
-        console.error('Error connecting to test API:', testErr);
-      }
-      
       const response = await axios.post(apiUrl, { email }, {
         headers: {
           'Content-Type': 'application/json',
@@ -103,9 +267,10 @@ const SignUpPage: React.FC = () => {
       if (response.data.success) {
         let successMessage = 'Verification code sent! Please check your email.';
         
-        // If there's a note about checking server logs, include it
-        if (response.data.note) {
-          successMessage += ' Note: ' + response.data.note;
+        // If there's a code in the response (development mode), use it
+        if (response.data.code) {
+          setVerificationCode(response.data.code);
+          successMessage = 'Verification code auto-filled for development.';
         }
         
         setSuccess(successMessage);
@@ -131,7 +296,68 @@ const SignUpPage: React.FC = () => {
         <title>Sign Up | YourManager</title>
         <meta name="description" content="Create your YourManager account - AI Chief-of-Staff that saves you 10+ hours per week" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+        {/* Adding the keyframes animation for the success message */}
+        <style jsx global>{`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
       </Head>
+
+      {showSuccessAnimation && (
+        <div style={successAnimationStyle.overlay}>
+          <motion.div
+            style={successAnimationStyle.card}
+            initial="hidden"
+            animate="visible"
+            variants={cardVariants}
+          >
+            <motion.div style={successAnimationStyle.svgContainer} variants={textVariants}>
+              <motion.svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="150"
+                height="150"
+                viewBox="0 0 150 150"
+                initial="hidden"
+                animate="visible"
+                onAnimationComplete={handleAnimationComplete}
+              >
+                <motion.circle
+                  cx="75"
+                  cy="75"
+                  r="70"
+                  fill="none"
+                  stroke="#4CAF50"
+                  strokeWidth="5"
+                  variants={circleVariants}
+                />
+                <motion.path
+                  d="M 40 75 L 65 100 L 110 50"
+                  fill="none"
+                  stroke="#4CAF50"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  variants={checkVariants}
+                />
+              </motion.svg>
+            </motion.div>
+            <motion.div style={successAnimationStyle.title} variants={textVariants}>
+              {successTitle}
+            </motion.div>
+            <motion.div style={successAnimationStyle.message} variants={textVariants}>
+              {successMessage}
+            </motion.div>
+          </motion.div>
+        </div>
+      )}
 
       <motion.div 
         className="signup-page"

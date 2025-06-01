@@ -130,6 +130,125 @@
   border-color: var(--slate-gray) !important;
 }
 
+/* User navigation styles */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-right: 30px;
+}
+
+.btn-dashboard {
+  background: transparent !important;
+  border: 2px solid var(--slate-gray) !important;
+  color: var(--soft-white) !important;
+  padding: 8px 20px !important;
+  border-radius: 30px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  letter-spacing: 0.5px !important;
+  font-size: 0.95rem !important;
+  display: inline-block !important;
+  text-align: center !important;
+}
+
+.btn-dashboard:hover {
+  background: rgba(119, 141, 169, 0.15) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--slate-gray) !important;
+}
+
+.user-dropdown-container {
+  position: relative;
+}
+
+.btn-user-menu {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 2px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  min-width: 240px;
+  background-color: #1b2838;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dropdown-user-info {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #17212e;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0 0 5px 0;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: #a7bcd0;
+  margin: 0;
+  word-break: break-word;
+}
+
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 12px 15px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background-color: #273950;
+}
+
+.logout-button {
+  color: #f77067;
+  font-weight: 500;
+}
+
 /* Add some top padding to the main content to account for fixed navbar */
 main {
   padding-top: 70px;
