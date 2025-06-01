@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
+import emailService from '../services/emailService';
 
 interface RegisterRequestBody {
   name: string;
@@ -25,6 +26,13 @@ interface CookieOptions {
   expires: Date;
   httpOnly: boolean;
   secure?: boolean;
+}
+
+// Extend the Request interface to include user property
+interface AuthRequest extends Request {
+  user?: {
+    id: number;
+  };
 }
 
 /**
@@ -122,7 +130,7 @@ export const login = async (req: Request, res: Response) => {
  * @route   GET /api/auth/me
  * @access  Private
  */
-export const getMe = async (req: Request, res: Response) => {
+export const getMe = async (req: AuthRequest, res: Response) => {
   try {
     if (!req.user || !req.user.id) {
       return res.status(401).json({
@@ -158,7 +166,7 @@ export const getMe = async (req: Request, res: Response) => {
  * @route   GET /api/auth/logout
  * @access  Private
  */
-export const logout = (req: Request, res: Response) => {
+export const logout = (req: AuthRequest, res: Response) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true
@@ -168,6 +176,68 @@ export const logout = (req: Request, res: Response) => {
     success: true,
     data: {}
   });
+};
+
+/**
+ * @desc    Send verification code to email
+ * @route   POST /api/auth/send-verification-code
+ * @access  Public
+ */
+export const sendVerificationCode = async (req: Request, res: Response) => {
+  try {
+    console.log('=== VERIFICATION CODE REQUEST ===');
+    console.log('Request body:', req.body);
+    
+    const { email } = req.body;
+
+    if (!email) {
+      console.log('No email provided');
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide an email address'
+      });
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      console.log('Invalid email format:', email);
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address'
+      });
+    }
+
+    // Send verification code
+    console.log('Sending verification code to:', email);
+    const result = await emailService.sendVerificationCode(email);
+
+    console.log('Email service result:', result);
+
+    // Return whatever the email service returned - success or error
+    if (result.success) {
+      // For development: Include the code in the response
+      const isDevelopment = process.env.NODE_ENV !== 'production';
+      
+      return res.status(200).json({
+        success: true,
+        message: result.message,
+        // Only include the code in development mode
+        ...(isDevelopment && result.code ? { code: result.code } : {})
+      });
+    } else {
+      return res.status(500).json({
+        success: false,
+        message: result.message
+      });
+    }
+  } catch (err) {
+    console.error('Error in sendVerificationCode controller:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Server error sending verification code'
+    });
+  }
 };
 
 /**

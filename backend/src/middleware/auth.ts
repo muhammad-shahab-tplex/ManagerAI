@@ -2,11 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
+// Define AuthRequest interface for type safety
+interface AuthRequest extends Request {
+  user?: {
+    id: number;
+    subscriptionTier?: string;
+  };
+}
+
 /**
  * Protect routes - Verify JWT token and attach user to request
  */
 export const protect = async (
-  req: Request, 
+  req: AuthRequest, 
   res: Response, 
   next: NextFunction
 ) => {
@@ -63,7 +71,7 @@ export const protect = async (
  * @param {String[]} roles - Array of authorized roles
  */
 export const authorize = (...roles: string[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user || !req.user.id) {
       return res.status(401).json({
         success: false,
@@ -97,7 +105,7 @@ export const authorize = (...roles: string[]) => {
  * @param {String[]} tiers - Array of authorized subscription tiers
  */
 export const requireSubscription = (...tiers: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
@@ -105,10 +113,10 @@ export const requireSubscription = (...tiers: string[]) => {
       });
     }
     
-    if (!tiers.includes(req.user.subscriptionTier)) {
+    if (!tiers.includes(req.user.subscriptionTier || '')) {
       return res.status(403).json({
         success: false,
-        message: `Your subscription tier (${req.user.subscriptionTier}) does not allow access to this feature. Please upgrade your plan.`
+        message: `Your subscription tier (${req.user.subscriptionTier || 'free'}) does not allow access to this feature. Please upgrade your plan.`
       });
     }
     

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -31,6 +32,8 @@ const SignUpPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isSendingCode, setIsSendingCode] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,6 +60,71 @@ const SignUpPage: React.FC = () => {
     }
   };
 
+  const handleSendCode = async () => {
+    // Validate email
+    if (!email) {
+      setError('Please enter your email address first.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    setError('');
+    setSuccess('');
+    setIsSendingCode(true);
+
+    try {
+      console.log('Sending verification code to:', email);
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/send-verification-code`;
+      console.log('API URL:', apiUrl);
+      
+      // First test if the API is reachable
+      try {
+        const testResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/test`);
+        console.log('Test API response:', testResponse.data);
+      } catch (testErr) {
+        console.error('Error connecting to test API:', testErr);
+      }
+      
+      const response = await axios.post(apiUrl, { email }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        withCredentials: true
+      });
+
+      console.log('Response:', response.data);
+      
+      if (response.data.success) {
+        let successMessage = 'Verification code sent! Please check your email.';
+        
+        // If there's a note about checking server logs, include it
+        if (response.data.note) {
+          successMessage += ' Note: ' + response.data.note;
+        }
+        
+        setSuccess(successMessage);
+      } else {
+        setError(response.data.message || 'Failed to send verification code.');
+      }
+    } catch (err: any) {
+      console.error('Error sending verification code:', err);
+      
+      if (err.code === 'ERR_NETWORK') {
+        setError('Network error: Cannot connect to server. Please try again later.');
+      } else {
+        setError(err.response?.data?.message || 'Failed to send verification code. Please try again.');
+      }
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -79,9 +147,9 @@ const SignUpPage: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <Logo size={32} />
+              <Logo size={32} />
           </motion.div>
-        </Link>
+          </Link>
         
         <motion.div 
           className="signup-content"
@@ -95,6 +163,7 @@ const SignUpPage: React.FC = () => {
           </motion.div>
 
           {error && <motion.div className="error-message" variants={fadeIn}>{error}</motion.div>}
+          {success && <motion.div className="success-message" variants={fadeIn}>{success}</motion.div>}
 
           <motion.form 
             onSubmit={handleSubmit} 
@@ -115,8 +184,9 @@ const SignUpPage: React.FC = () => {
               />
             </motion.div>
 
-            <motion.div className="form-group" variants={fadeIn}>
+            <motion.div className="form-group verification-code-group" variants={fadeIn}>
               <label htmlFor="verificationCode">Verification Code</label>
+              <div className="verification-code-container">
               <input
                 type="text"
                 id="verificationCode"
@@ -125,6 +195,15 @@ const SignUpPage: React.FC = () => {
                 placeholder="Enter verification code"
                 required
               />
+                <button 
+                  type="button" 
+                  className="send-code-button"
+                  onClick={handleSendCode}
+                  disabled={isSendingCode}
+                >
+                  {isSendingCode ? 'Sending...' : 'Send Code'}
+                </button>
+            </div>
             </motion.div>
 
             <motion.div className="form-group" variants={fadeIn}>
@@ -151,7 +230,7 @@ const SignUpPage: React.FC = () => {
                 <label htmlFor="agreeToTerms">
                   I agree to the <Link href="/terms"><span className="terms-link">Terms</span></Link> and <Link href="/privacy"><span className="terms-link">Privacy Policy</span></Link> of ScamLock's
                 </label>
-              </div>
+            </div>
             </motion.div>
 
             <motion.button 

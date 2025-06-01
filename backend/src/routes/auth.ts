@@ -3,18 +3,20 @@ import {
   register, 
   login, 
   getMe, 
-  logout 
+  logout,
+  sendVerificationCode
 } from '../controllers/auth';
 import { protect } from '../middleware/auth';
 
 const router = express.Router();
 
-// Public routes - Use type assertion to bypass TypeScript errors
-router.post('/register', register as any);
-router.post('/login', login as any);
+// Public routes
+router.post('/register', register);
+router.post('/login', login);
+router.post('/send-verification-code', sendVerificationCode);
 
-// Protected routes - Use type assertion to bypass TypeScript errors
-router.get('/me', protect as any, getMe as any);
-router.get('/logout', protect as any, logout as any);
+// Protected routes
+router.get('/me', protect, getMe);
+router.get('/logout', protect, logout);
 
 export default router; 

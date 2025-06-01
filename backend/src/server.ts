@@ -17,8 +17,13 @@ const app: Application = express();
 // Body parser
 app.use(express.json());
 
-// Enable CORS
-app.use(cors());
+// Configure CORS with specific options
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+}));
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -29,6 +34,15 @@ app.use('/api/auth', authRoutes);
 // Default route
 app.get('/', (req, res) => {
   res.send('API is running');
+});
+
+// Test endpoint for verification
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API is working correctly',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Set port

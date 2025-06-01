@@ -73,7 +73,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           variants={pageVariants}
           transition={pageTransition}
         >
-          <Component {...pageProps} />
+        <Component {...pageProps} />
         </motion.main>
       </AnimatePresence>
       {!isAuthPage && <Footer />}

@@ -98,9 +98,9 @@ const SignInPage: React.FC = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <Logo size={40} />
+              <Logo size={40} />
           </motion.div>
-        </Link>
+          </Link>
         
         <motion.div 
           className="signin-content"

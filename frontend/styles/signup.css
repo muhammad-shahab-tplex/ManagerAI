@@ -316,6 +316,52 @@ html, body {
   box-shadow: 0 4px 12px rgba(65, 90, 119, 0.3);
 }
 
+/* Verification code container */
+.verification-code-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.verification-code-container input {
+  flex-grow: 1;
+}
+
+.send-code-button {
+  padding: 8px 12px;
+  background-color: rgba(13, 27, 42, 0.7);
+  border: 1px solid var(--dark-blue);
+  color: var(--soft-white);
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.send-code-button:hover {
+  background-color: rgba(119, 141, 169, 0.15);
+  border-color: var(--slate-gray);
+}
+
+.send-code-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success message */
+.success-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+
 @media (max-width: 640px) {
   .signup-page {
     height: auto;
