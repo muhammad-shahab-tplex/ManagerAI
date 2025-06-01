@@ -11,6 +11,17 @@
   right: 0;
   z-index: 999;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  /* Add hardware acceleration to prevent layout shifts */
+  transform: translateZ(0);
+  /* Make transitions smoother */
+  transition: opacity 0.3s ease;
+  /* Ensure consistent width across pages */
+  width: 100vw;
+  max-width: 100%;
+  /* Prevent shifting on page changes */
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 0;
 }
 
 .navbar-container {

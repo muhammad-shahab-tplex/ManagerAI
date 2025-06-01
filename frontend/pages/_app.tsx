@@ -14,7 +14,6 @@ import '../styles/signup.css';
 import '../styles/roadmap.css';
 import '../styles/features.css';
 import '../styles/pricing.css';
-import '../styles/transitions.css';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 
