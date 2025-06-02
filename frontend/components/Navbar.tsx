@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Logo from './Logo';
 import { motion } from 'framer-motion';
+import AccountModal from './AccountModal';
 
 interface User {
   id: number;
@@ -146,6 +147,7 @@ const Navbar: React.FC = () => {
   const [showLogoutAnimation, setShowLogoutAnimation] = useState(false);
   const [logoutTitle, setLogoutTitle] = useState('');
   const [logoutMessage, setLogoutMessage] = useState('');
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
 
   // Check if user is logged in on component mount
   useEffect(() => {
@@ -187,6 +189,11 @@ const Navbar: React.FC = () => {
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
+  };
+
+  const openAccountModal = () => {
+    setIsAccountModalOpen(true);
+    setDropdownOpen(false);
   };
 
   return (
@@ -307,14 +314,9 @@ const Navbar: React.FC = () => {
                     </div>
                     <ul className="dropdown-menu">
                       <li>
-                        <Link href="/profile">
-                          <span className="dropdown-item">Profile</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/settings">
-                          <span className="dropdown-item">Settings</span>
-                        </Link>
+                        <button onClick={openAccountModal} className="dropdown-item">
+                          Account
+                        </button>
                       </li>
                       <li>
                         <button 
@@ -341,6 +343,8 @@ const Navbar: React.FC = () => {
           )}
         </div>
       </nav>
+
+      <AccountModal isOpen={isAccountModalOpen} onClose={() => setIsAccountModalOpen(false)} />
     </>
   );
 };
