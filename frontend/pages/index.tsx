@@ -19,4 +19,6 @@ export default function Index() {
       </div>
     </div>
   );
-} 
+}
+
+// Test edit - This comment will verify if hot reload is working 
