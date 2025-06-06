@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:postgres@localhost:5432/managerai"
+}
+
+// User model
+model User {
+  id                   Int                @id @default(autoincrement())
+  name                 String             @db.VarChar(100)
+  email                String             @unique @db.VarChar(100)
+  password             String             @db.VarChar(100)
+  role                 String             @default("user") @db.VarChar(20)
+  subscriptionTier     String             @default("free") @db.VarChar(20) @map("subscription_tier")
+  googleId             String?            @map("google_id") @db.VarChar(100)
+  microsoftId          String?            @map("microsoft_id") @db.VarChar(100)
+  githubId             String?            @map("github_id") @db.VarChar(100)
+  resetPasswordToken   String?            @map("reset_password_token") @db.VarChar(200)
+  resetPasswordExpire  DateTime?          @map("reset_password_expire")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  
+  // Relations
+  preferences          UserPreference?
+  toneProfile          ToneProfile?
+  integrationTokens    IntegrationToken[]
+  oauthSessions        OAuthSession[]
+  loginHistory         LoginHistory[]
+  verificationCodes    VerificationCode[]
+
+  @@map("users")
+  @@index([email])
+  @@index([googleId])
+  @@index([githubId])
+  @@index([microsoftId])
+}
+
+// User Preferences model
+model UserPreference {
+  id                         Int      @id @default(autoincrement())
+  userId                     Int      @unique @map("user_id")
+  emailFrequency             String   @default("daily") @map("email_frequency") @db.VarChar(20)
+  autoReplyEnabled           Boolean  @default(false) @map("auto_reply_enabled")
+  autoReplyConfidenceThreshold Float   @default(0.85) @map("auto_reply_confidence_threshold")
+  
+  // Relation to User
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// Integration Tokens model
+model IntegrationToken {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  service     String   @db.VarChar(50)
+  accessToken String   @map("access_token") @db.VarChar(1000)
+  refreshToken String?  @map("refresh_token") @db.VarChar(1000)
+  expiry      DateTime?
+  
+  // Relation to User
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("integration_tokens")
+}
+
+// Tone Profiles model
+model ToneProfile {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique @map("user_id")
+  formal      Float    @default(0.5)
+  friendly    Float    @default(0.5)
+  technical   Float    @default(0.5)
+  simple      Float    @default(0.5)
+  confident   Float    @default(0.5)
+  
+  // Relation to User
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tone_profiles")
+}
+
+// OAuth Sessions model
+model OAuthSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  provider    String   @db.VarChar(20)
+  stateToken  String   @map("state_token") @db.VarChar(100)
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  // Relation to User
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oauth_sessions")
+  @@index([userId])
+  @@index([stateToken])
+}
+
+// Login History model
+model LoginHistory {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  ipAddress   String   @map("ip_address") @db.VarChar(50)
+  userAgent   String   @map("user_agent") @db.VarChar(200)
+  loginTime   DateTime @default(now()) @map("login_time")
+  success     Boolean  @default(true)
+  
+  // Relation to User
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("login_history")
+  @@index([userId])
+  @@index([loginTime])
+}
+
+// Verification Codes model
+model VerificationCode {
+  id        Int      @id @default(autoincrement())
+  email     String   @db.VarChar(100)
+  code      String   @db.VarChar(10)
+  type      String   @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at")
+  userId    Int?     @map("user_id")
+  
+  // Relation to User (optional)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("verification_codes")
+  @@index([email])
+  @@index([code])
+}

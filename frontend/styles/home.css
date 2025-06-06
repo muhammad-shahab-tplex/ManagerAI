@@ -238,16 +238,7 @@ body {
   display: inline-block;
 }
 
-.home-features-title:after {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 3px;
-  background-color: var(--dark-blue);
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-}
+
 
 .home-features-grid {
   display: grid;
@@ -345,16 +336,7 @@ body {
   display: inline-block;
 }
 
-.home-testimonials-title:after {
-  content: '';
-  position: absolute;
-  width: 60px;
-  height: 3px;
-  background-color: var(--dark-blue);
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-}
+
 
 .home-testimonials-container {
   display: flex;

@@ -2,14 +2,22 @@ import express, { Application } from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { testConnection } from './config/db';
-import runMigrations from './database/migration';
+import { prisma } from './prisma';
+import { runMigrations, generatePrismaClient } from './prisma/migrate';
 
 // Route files
 import authRoutes from './routes/auth';
 
 // Load environment variables
 dotenv.config();
+
+// Get database connection info
+const dbUrl = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/managerai';
+const dbInfo = new URL(dbUrl);
+console.log('Database connection info:');
+console.log(`Database: ${dbInfo.pathname.substring(1)}`);
+console.log(`User: ${dbInfo.username}`);
+console.log(`Port: ${dbInfo.port}`);
 
 // Initialize express app
 const app: Application = express();
@@ -50,23 +58,51 @@ const PORT = process.env.PORT || 5000;
 
 // Start server
 const startServer = async () => {
+  let databaseConnected = false;
+
   try {
     // Test database connection
-    await testConnection();
+    await prisma.$connect();
+    console.log('Connected to the database successfully');
+    databaseConnected = true;
 
-    // Run database migrations if needed
-    if (process.env.RUN_MIGRATIONS === 'true') {
+    // Run Prisma migrations if needed
+    if (process.env.RUN_MIGRATIONS === 'true' && databaseConnected) {
       await runMigrations();
+      await generatePrismaClient();
     }
-
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   } catch (error) {
-    console.error('Server initialization failed:', error);
-    process.exit(1);
+    console.error('Database connection failed:', error);
+    console.log('Server will start without database functionality');
   }
+
+  // Start server regardless of database connection
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    if (!databaseConnected) {
+      console.log('WARNING: Server is running without database connectivity');
+      console.log('Some features may not work correctly');
+    }
+  });
 };
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  try {
+    await prisma.$disconnect();
+  } catch (error) {
+    console.error('Error during disconnect:', error);
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  try {
+    await prisma.$disconnect();
+  } catch (error) {
+    console.error('Error during disconnect:', error);
+  }
+  process.exit(0);
+});
 
 startServer(); 

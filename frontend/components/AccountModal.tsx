@@ -184,11 +184,26 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
     setSuccess('');
   };
   
+  // Close modal with proper cleanup
+  const handleCloseModal = () => {
+    // First close the modal visually
+    onClose();
+    
+    // Then reset state after animation completes
+    setTimeout(() => {
+      setActiveSection('profile');
+      setError('');
+      setSuccess('');
+      setShowSuccessCheckmark(false);
+      setToast(null);
+    }, 300);
+  };
+  
   // Close modal with escape key
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        handleCloseModal();
       }
     };
     
@@ -200,12 +215,15 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
     } else {
       document.body.style.overflow = 'auto';
+      document.body.classList.remove('modal-open');
     }
     
     return () => {
       document.body.style.overflow = 'auto';
+      document.body.classList.remove('modal-open');
     };
   }, [isOpen]);
   
@@ -592,14 +610,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="modal-container">
+        <div className="account-modal-container">
           <motion.div 
-            className="modal-backdrop"
+            className="account-modal-backdrop"
             variants={backdropVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            onClick={onClose}
+            onClick={handleCloseModal}
           >
             <motion.div 
               className="account-modal"
@@ -609,7 +627,7 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
               exit="exit"
               onClick={handleModalClick}
             >
-              <button className="modal-close-btn" onClick={onClose}>
+              <button className="account-modal-close-btn" onClick={handleCloseModal}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -623,14 +641,14 @@ const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
                       {profilePictureUrl ? (
                         <img src={profilePictureUrl} alt={name} />
                       ) : (
-                        <div className="profile-initials">
+                        <div className="account-modal-profile-initials">
                           {name ? name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || '?'}
                         </div>
                       )}
                       <span>{name || user?.email || 'User'}</span>
                     </li>
                     
-                    <div className="account-nav-section">Account</div>
+                    <div className="account-modal-nav-section">Account</div>
                     <li 
                       className={activeSection === 'profile' ? 'active' : ''}
                       onClick={() => setActiveSection('profile')}
