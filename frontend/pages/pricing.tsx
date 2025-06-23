@@ -172,9 +172,7 @@ const PricingPage: React.FC = () => {
               </ul>
               
               <Link href={plan.buttonLink}>
-                <button 
-                  className="plan-button"
-                >
+                <button className="plan-button">
                   {plan.buttonText}
                 </button>
               </Link>
@@ -193,6 +191,19 @@ const PricingPage: React.FC = () => {
             ))}
           </div>
         </div>
+
+        <div className="cta-section">
+          <h2>Ready to transform your productivity?</h2>
+          <p>Join thousands of professionals who have reclaimed their time with YourManager.</p>
+          <div className="cta-buttons">
+            <Link href="/signup">
+              <button className="cta-button primary">Get Started Free</button>
+            </Link>
+            <Link href="/pricing">
+              <button className="cta-button secondary">View Pricing</button>
+            </Link>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -200,7 +211,7 @@ const PricingPage: React.FC = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 10px 20px 40px;
-          color: white;
+          color: #111827;
         }
         
         .header {
@@ -211,11 +222,12 @@ const PricingPage: React.FC = () => {
         .header h1 {
           font-size: 2.2rem;
           margin-bottom: 30px;
+          color: #111827;
         }
         
         .header p {
           font-size: 1rem;
-          color: rgba(255, 255, 255, 0.7);
+          color: #6B7280;
           max-width: 600px;
           margin: 0 auto 30px auto;
           line-height: 1.5;
@@ -228,6 +240,7 @@ const PricingPage: React.FC = () => {
           gap: 12px;
           margin-bottom: 30px;
           padding: 5px 0;
+          color: #111827;
         }
         
         .toggle {
@@ -250,7 +263,7 @@ const PricingPage: React.FC = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(255, 255, 255, 0.2);
+          background-color: #E5E7EB;
           transition: .4s;
           border-radius: 34px;
         }
@@ -262,13 +275,13 @@ const PricingPage: React.FC = () => {
           width: 24px;
           left: 4px;
           bottom: 4px;
-          background-color: white;
+          background-color: #FFFFFF;
           transition: .4s;
           border-radius: 50%;
         }
         
         input:checked + .slider {
-          background-color: #415A77;
+          background-color: #111827;
         }
         
         input:checked + .slider:before {
@@ -276,7 +289,7 @@ const PricingPage: React.FC = () => {
         }
         
         .discount-badge {
-          background-color: rgba(65, 90, 119, 0.2);
+          background-color: #111827;
           color: #FFFFFF;
           padding: 4px 10px;
           border-radius: 20px;
@@ -302,9 +315,9 @@ const PricingPage: React.FC = () => {
           display: flex;
           flex-direction: column;
           position: relative;
-          border: none;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(65, 90, 119, 0.5);
-          background: linear-gradient(145deg, #0D1B2A, #14243A);
+          border: 1px solid #E5E7EB;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          background: #FFFFFF;
           transition: all 0.3s ease;
           height: 400px;
           min-height: auto;
@@ -312,14 +325,15 @@ const PricingPage: React.FC = () => {
         }
         
         .pricing-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(65, 90, 119, 0.6);
+          transform: translateY(-4px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         }
         
         .plan-name {
           font-size: 1.2rem;
           margin-bottom: 8px;
           text-align: center;
+          color: #111827;
         }
         
         .plan-price {
@@ -327,6 +341,7 @@ const PricingPage: React.FC = () => {
           align-items: baseline;
           justify-content: center;
           margin-bottom: 5px;
+          color: #111827;
         }
         
         .currency {
@@ -340,7 +355,7 @@ const PricingPage: React.FC = () => {
         }
         
         .period {
-          color: rgba(255, 255, 255, 0.7);
+          color: #6B7280;
           font-size: 0.9rem;
           margin-left: 2px;
         }
@@ -348,7 +363,7 @@ const PricingPage: React.FC = () => {
         .plan-description {
           text-align: center;
           margin-bottom: 10px;
-          color: rgba(255, 255, 255, 0.7);
+          color: #6B7280;
           font-size: 0.85rem;
         }
         
@@ -366,6 +381,7 @@ const PricingPage: React.FC = () => {
           margin-bottom: 5px;
           font-size: 0.8rem;
           line-height: 1.3;
+          color: #111827;
         }
         
         .check-icon {
@@ -374,16 +390,16 @@ const PricingPage: React.FC = () => {
         }
         
         .included .check-icon {
-          color: rgba(255, 255, 255, 0.7);
+          color: #111827;
         }
         
         .not-included {
-          color: rgba(255, 255, 255, 0.5);
+          color: #6B7280;
           text-decoration: line-through;
         }
         
         .not-included .check-icon {
-          color: rgba(255, 255, 255, 0.3);
+          color: #6B7280;
         }
         
         .plan-button {
@@ -391,25 +407,108 @@ const PricingPage: React.FC = () => {
           padding: 8px;
           border-radius: 30px;
           border: none;
-          color: white;
+          color: #FFFFFF;
           font-size: 0.85rem;
           font-weight: bold;
           cursor: pointer;
           transition: all 0.2s ease;
           margin-top: 5px;
-          background-color: #415A77;
+          background-color: #111827;
+        }
+        
+        .plan-button:hover {
+          background-color: #1F2937;
+        }
+        
+        .cta-section {
+          text-align: center;
+          background: #FFFFFF;
+          border-radius: 16px;
+          padding: 60px 40px;
+          margin: 80px 0 0 0;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          border: 1px solid #E5E7EB;
+        }
+
+        .cta-section h2 {
+          font-size: 2.2rem;
+          margin-bottom: 20px;
+          color: #111827;
+          font-weight: 700;
+        }
+
+        .cta-section p {
+          color: #6B7280;
+          font-size: 1.1rem;
+          margin-bottom: 40px;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+          line-height: 1.6;
+        }
+
+        .cta-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .cta-button {
+          padding: 14px 32px;
+          border-radius: 8px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          letter-spacing: 0.3px;
+          min-width: 160px;
+          text-decoration: none;
+          display: inline-block;
+          text-align: center;
+        }
+
+        .cta-button.primary {
+          background-color: #111827;
+          color: #FFFFFF;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .cta-button.secondary {
+          background-color: #FFFFFF;
+          color: #111827;
+          border: 1px solid #E5E7EB;
+        }
+
+        .cta-button:hover {
+          transform: translateY(-2px);
+        }
+
+        .cta-button.primary:hover {
+          background-color: #1F2937;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .cta-button.secondary:hover {
+          background: #FFFFFF;
+          border-color: #111827;
+          color: #1F2937;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .faq-section {
           margin-top: 120px;
           padding-top: 60px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          border-top: 1px solid #E5E7EB;
+          margin-bottom: 0;
         }
         
         .faq-section h2 {
           text-align: center;
           margin-bottom: 40px;
           font-size: 2rem;
+          color: #111827;
         }
         
         .faq-grid {
@@ -419,21 +518,23 @@ const PricingPage: React.FC = () => {
         }
         
         .faq-item {
-          background-color: rgba(13, 27, 42, 0.5);
+          background-color: #FFFFFF;
           border-radius: 8px;
           padding: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 1px solid #E5E7EB;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
         
         .faq-item h3 {
           margin-top: 0;
           margin-bottom: 10px;
           font-size: 1.2rem;
+          color: #111827;
         }
         
         .faq-item p {
           margin: 0;
-          color: rgba(255, 255, 255, 0.7);
+          color: #6B7280;
         }
         
         @media (max-width: 768px) {
@@ -442,6 +543,25 @@ const PricingPage: React.FC = () => {
             max-width: 400px;
             margin-left: auto;
             margin-right: auto;
+          }
+          
+          .cta-section {
+            padding: 40px 20px;
+            margin: 60px 0 0 0;
+          }
+          
+          .cta-section h2 {
+            font-size: 1.8rem;
+          }
+          
+          .cta-buttons {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .cta-button {
+            width: 100%;
+            max-width: 280px;
           }
           
           .faq-grid {

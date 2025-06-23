@@ -1,13 +1,24 @@
-/* Global Variables */
+/* Global Variables - Light Theme */
 :root {
-  --midnight-navy: #0D1B2A; 
-  --dark-blue: #1B263B;
-  --steel-blue: #415A77;
-  --slate-gray: #778DA9; 
-  --soft-white: #E0E1DD;
-  --emerald-green: #1FAB89;
-  --light-teal: #3AC1B8;
-  --warm-gold: #FFD700;
+  --primary-white: #FFFFFF;
+  --light-gray: #F9FAFB;
+  --dark-text: #111827;
+  --medium-dark: #1F2937;
+  --gray-text: #6B7280;
+  --border-gray: #D1D5DB;
+  --light-border: #E5E7EB;
+  --blue-gray: #A0AEC0;
+  --overlay: rgba(0,0,0,0.05);
+  
+  /* Semantic color mappings - Updated to exact colors */
+  --background-primary: #FFFFFF;
+  --background-secondary: #F9FAFB;
+  --text-primary: #111827;
+  --text-secondary: #1F2937;
+  --text-muted: #6B7280;
+  --border-light: #E5E7EB;
+  --border-medium: #D1D5DB;
+  --accent-blue: #A0AEC0;
 }
 
 /* Global Styles */
@@ -17,9 +28,232 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background-color: var(--midnight-navy);
-  color: var(--soft-white);
+  background-color: var(--background-primary);
+  color: #111827;
   min-height: 100vh;
+}
+
+/* Global Card Styles - Force all cards to use #FFFFFF */
+.card,
+.glass-card,
+.home-feature-card,
+.home-testimonial-card,
+.premium-glass-card,
+.feature-card,
+.testimonial-card,
+.pricing-plan,
+.pricing-plan-premium,
+.faq-item,
+.help-option,
+.timeline-card,
+.step-item,
+.benefit-card,
+.dashboard-card,
+.modal-content,
+.navbar,
+.footer {
+  background: #FFFFFF;
+  background-color: #FFFFFF;
+}
+
+/* Remove any dark overlays or black highlights */
+.card:hover,
+.glass-card:hover,
+.home-feature-card:hover,
+.home-testimonial-card:hover,
+.premium-glass-card:hover,
+.feature-card:hover,
+.testimonial-card:hover,
+.pricing-plan:hover,
+.pricing-plan-premium:hover,
+.faq-item:hover,
+.help-option:hover,
+.timeline-card:hover,
+.benefit-card:hover,
+.dashboard-card:hover {
+  background: #FFFFFF;
+  background-color: #FFFFFF;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border-color: #E5E7EB;
+}
+
+/* Remove any dark selection highlights */
+*::selection {
+  background: rgba(17, 24, 39, 0.1);
+  color: #111827;
+}
+
+*::-moz-selection {
+  background: rgba(17, 24, 39, 0.1);
+  color: #111827;
+}
+
+/* Global Input Styles - Force all inputs to use #FFFFFF background and #D1D5DB borders */
+input,
+textarea,
+select,
+.form-group input,
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"] {
+  background: #FFFFFF;
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-color: #D1D5DB;
+}
+
+/* Input focus states */
+input:focus,
+textarea:focus,
+select:focus,
+.form-group input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(160, 174, 192, 0.2);
+  background: #FFFFFF;
+  background-color: #FFFFFF;
+}
+
+/* Global Border and Divider Styles - Force all dividers to use #E5E7EB */
+.border,
+.border-top,
+.border-bottom,
+.border-left,
+.border-right,
+.divider,
+.card-divider,
+.footer-divider,
+.section-divider,
+.timeline-line,
+.category-title,
+.dropdown-user-info,
+.footer-bottom,
+hr {
+  border-color: #E5E7EB;
+}
+
+/* Specific border applications */
+.footer {
+  border-top: 1px solid #E5E7EB;
+}
+
+.footer-bottom {
+  border-top: 1px solid #E5E7EB;
+}
+
+.dropdown-user-info {
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.category-title {
+  border-bottom: 1px solid #E5E7EB;
+}
+
+/* Global heading styles - Force all headings to use exact color */
+h1, h2, h3, h4, h5, h6,
+.home-hero-title,
+.home-features-title,
+.home-testimonials-title,
+.home-cta-title,
+.page-title,
+.hero h1,
+.section-title,
+.feature-title,
+.testimonial-title {
+  margin: 0;
+  line-height: 1.2;
+  color: #111827;
+}
+
+/* Global text styles - Force all text to use exact color */
+p, span, div, li, 
+.home-hero-content,
+.home-container,
+.home-hero-section,
+.home-testimonial-text,
+.home-author-name,
+.feature-card h3,
+.feature-content h2,
+.timeline-title,
+.plan-name,
+.faq-question h3,
+.help-option h3,
+.category-title,
+.step-title,
+.benefit-title,
+.testimonial-author .author-name {
+  color: #111827;
+}
+
+/* Global text hover styles */
+p:hover,
+span:hover,
+div:hover,
+li:hover,
+h1:hover,
+h2:hover,
+h3:hover,
+h4:hover,
+h5:hover,
+h6:hover,
+.text-hover:hover,
+.nav-links:hover,
+a:hover {
+  color: #1F2937;
+  transition: color 0.3s ease;
+}
+
+/* Global muted text styles - Force all muted text to use exact color */
+.muted,
+.text-muted,
+p.muted,
+span.muted,
+.home-hero-subtitle,
+.home-feature-description,
+.home-author-title,
+.home-cta-text,
+.page-description,
+.hero p,
+.pricing-header p,
+.pricing-toggle span,
+.signin-header p,
+.signup-header p,
+.footer-section p,
+.footer-bottom,
+.plan-description,
+.plan-billing-cycle,
+.feature-description,
+.step-description,
+.benefit-description,
+.testimonial-text,
+.author-title,
+.faq-answer p,
+.help-option p,
+.timeline-description,
+.cta-section p {
+  color: #6B7280;
+}
+
+/* Ensure muted text stays muted on hover */
+.muted:hover,
+.text-muted:hover,
+p.muted:hover,
+span.muted:hover,
+.home-hero-subtitle:hover,
+.home-feature-description:hover,
+.home-author-title:hover,
+.home-cta-text:hover,
+.page-description:hover,
+.hero p:hover,
+.pricing-header p:hover,
+.signin-header p:hover,
+.signup-header p:hover,
+.footer-section p:hover,
+.footer-bottom:hover {
+  color: #6B7280;
 }
 
 /* Global page transition styles */
@@ -53,23 +287,23 @@ body {
 }
 
 a {
-  color: var(--emerald-green);
+  color: var(--accent-blue);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: var(--slate-gray);
+  color: #1F2937;
 }
 
-/* Morphing Background Effect */
+/* Light background with subtle pattern */
 .morphing-background {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--midnight-navy);
+  background-color: var(--background-primary);
   z-index: -100;
   overflow: hidden;
 }
@@ -83,12 +317,12 @@ a:hover {
   top: -100%;
   left: -100%;
   z-index: -1;
-  background: radial-gradient(circle, rgba(27, 38, 59, 0.6) 0%, transparent 50%);
+  background: radial-gradient(circle, var(--overlay) 0%, transparent 50%);
   animation: rotate 60s infinite linear;
 }
 
 .morphing-background::after {
-  background: radial-gradient(circle, rgba(65, 90, 119, 0.4) 0%, transparent 40%);
+  background: radial-gradient(circle, rgba(160, 174, 192, 0.1) 0%, transparent 40%);
   animation: rotate 120s infinite linear reverse;
 }
 
@@ -123,11 +357,12 @@ main {
 .page-title {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #111827;
 }
 
 .page-description {
   font-size: 1.1rem;
-  color: var(--slate-gray);
+  color: #6B7280;
   max-width: 700px;
   margin: 0 auto;
 }
@@ -159,25 +394,20 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  line-height: 1.2;
-}
-
 /* Reset & Base Styles */
 html, 
 body {
   padding: 0;
   margin: 0;
   font-family: var(--font-sans);
-  color: var(--soft-white);
+  color: #111827;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Simple solid background */
+/* Simple light background */
 body {
-  background: var(--midnight-navy);
+  background: var(--background-primary);
   position: relative;
   overflow: hidden;
 }

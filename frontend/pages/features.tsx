@@ -19,6 +19,21 @@ const FeaturesPage: React.FC = () => {
       title: "AI Response Suggestions",
       description: "Context-aware reply suggestions that match your writing style and tone.",
       icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    },
+    {
+      title: "Task Automation",
+      description: "Automate repetitive tasks and workflows to save time and reduce manual effort.",
+      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+    },
+    {
+      title: "Analytics & Insights",
+      description: "Get detailed insights into your productivity patterns and optimize your workflow.",
+      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+    },
+    {
+      title: "Team Collaboration",
+      description: "Seamlessly collaborate with your team and share insights across your organization.",
+      icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
     }
   ];
 
@@ -137,256 +152,6 @@ const FeaturesPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 40px 20px;
-          color: white;
-        }
-
-        .hero {
-          text-align: center;
-          margin-bottom: 60px;
-        }
-
-        .hero h1 {
-          font-size: 2.8rem;
-          margin-bottom: 20px;
-          background: linear-gradient(45deg, #ffffff, #778da9);
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-          font-size: 1.2rem;
-          color: rgba(255, 255, 255, 0.8);
-          max-width: 700px;
-          margin: 0 auto;
-          line-height: 1.6;
-        }
-
-        .main-features {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 30px;
-          margin-bottom: 80px;
-        }
-
-        .feature-card {
-          background: linear-gradient(145deg, #0D1B2A, #14243A);
-          border-radius: 12px;
-          padding: 30px;
-          text-align: center;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(65, 90, 119, 0.5);
-          transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(65, 90, 119, 0.6);
-        }
-
-        .feature-icon {
-          font-size: 3rem;
-          margin-bottom: 20px;
-          color: rgba(255, 255, 255, 0.7);
-          display: flex;
-          justify-content: center;
-        }
-
-        .feature-icon svg {
-          width: 48px;
-          height: 48px;
-          stroke: rgba(255, 255, 255, 0.7);
-        }
-
-        .feature-card h3 {
-          font-size: 1.4rem;
-          margin-bottom: 15px;
-          color: #fff;
-        }
-
-        .feature-card p {
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.95rem;
-          line-height: 1.5;
-        }
-
-        .detailed-features {
-          margin-bottom: 80px;
-        }
-
-        .detailed-feature {
-          display: flex;
-          align-items: center;
-          margin-bottom: 80px;
-          gap: 40px;
-        }
-
-        .detailed-feature.reverse {
-          flex-direction: row-reverse;
-        }
-
-        .feature-content {
-          flex: 1;
-        }
-
-        .feature-content h2 {
-          font-size: 2rem;
-          margin-bottom: 15px;
-          color: #fff;
-        }
-
-        .feature-description {
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 1.1rem;
-          line-height: 1.6;
-          margin-bottom: 25px;
-        }
-
-        .feature-list {
-          list-style: none;
-          padding: 0;
-        }
-
-        .feature-list li {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 12px;
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 1rem;
-        }
-
-        .check-icon {
-          color: #415A77;
-          margin-right: 10px;
-          font-weight: bold;
-        }
-
-        .feature-image {
-          flex: 1;
-          max-width: 500px;
-        }
-
-        .image-placeholder {
-          background: rgba(65, 90, 119, 0.2);
-          border-radius: 12px;
-          height: 300px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-size: 1.5rem;
-          color: rgba(255, 255, 255, 0.5);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px 2px rgba(65, 90, 119, 0.3);
-          position: relative;
-        }
-
-        .image-placeholder::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-radius: 12px;
-          box-shadow: 0 0 20px 3px rgba(65, 90, 119, 0.4);
-          z-index: -1;
-        }
-
-        .cta-section {
-          text-align: center;
-          background: linear-gradient(145deg, rgba(13, 27, 42, 0.8), rgba(20, 36, 58, 0.8));
-          border-radius: 12px;
-          padding: 60px 40px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 15px 2px rgba(65, 90, 119, 0.3);
-          position: relative;
-        }
-
-        .cta-section::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          border-radius: 12px;
-          box-shadow: 0 0 20px 3px rgba(65, 90, 119, 0.4);
-          z-index: -1;
-        }
-
-        .cta-section h2 {
-          font-size: 2.2rem;
-          margin-bottom: 15px;
-        }
-
-        .cta-section p {
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 1.1rem;
-          margin-bottom: 30px;
-          max-width: 600px;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .cta-buttons {
-          display: flex;
-          justify-content: center;
-          gap: 20px;
-        }
-
-        .cta-button {
-          padding: 12px 30px;
-          border-radius: 30px;
-          font-size: 1rem;
-          font-weight: bold;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          border: none;
-        }
-
-        .cta-button.primary {
-          background-color: #415A77;
-          color: white;
-        }
-
-        .cta-button.secondary {
-          background-color: transparent;
-          color: white;
-          border: 2px solid #415A77;
-        }
-
-        .cta-button:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        @media (max-width: 768px) {
-          .detailed-feature {
-            flex-direction: column;
-            gap: 30px;
-          }
-
-          .detailed-feature.reverse {
-            flex-direction: column;
-          }
-
-          .feature-image {
-            max-width: 100%;
-          }
-
-          .cta-buttons {
-            flex-direction: column;
-            gap: 15px;
-          }
-
-          .cta-button {
-            width: 100%;
-          }
-        }
-      `}</style>
     </>
   );
 };
