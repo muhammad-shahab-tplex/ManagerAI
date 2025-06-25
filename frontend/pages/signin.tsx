@@ -1,7 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
+
+// Count Up Animation Component
+const CountUpAnimation = ({ end, duration = 2000, suffix = '', prefix = '' }: {
+  end: number;
+  duration?: number;
+  suffix?: string;
+  prefix?: string;
+}) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          
+          const startTime = Date.now();
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Smoother easing function
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentCount = easeOutQuart * end;
+            
+            // Use decimal precision for ultra-smooth animation
+            setCount(Math.round(currentCount * 100) / 100);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              setCount(end);
+            }
+          };
+          
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [end, duration, hasAnimated]);
+
+  return (
+    <div ref={elementRef} className="stat-value">
+      {prefix}{Math.round(count)}{suffix}
+    </div>
+  );
+};
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({
@@ -52,6 +108,7 @@ const SignInPage = () => {
       <Head>
         <title>Sign In - ManagerAI</title>
         <meta name="description" content="Sign in to your ManagerAI account" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
 
       <div className="auth-container">
@@ -84,6 +141,8 @@ const SignInPage = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
+                  aria-describedby="email-error"
+                  autoComplete="email"
                 />
               </div>
 
@@ -98,11 +157,15 @@ const SignInPage = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
+                    aria-describedby="password-error"
+                    autoComplete="current-password"
                   />
                   <button
                     type="button"
                     className="password-toggle"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    tabIndex={0}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       {showPassword ? (
@@ -145,8 +208,8 @@ const SignInPage = () => {
               <span>or</span>
             </div>
 
-            <button className="google-btn" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24">
+            <button className="google-btn" type="button" aria-label="Sign in with Google">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -174,8 +237,27 @@ const SignInPage = () => {
         {/* Right Panel - Visual Content */}
         <div className="auth-right">
           <div className="visual-card">
-            <h2>Your AI Chief-of-Staff awaits</h2>
-            <p>Experience intelligent task management, automated workflows, and data-driven insights that transform how you work. Join thousands of professionals already using AI to work smarter.</p>
+            <h2>Manage Smarter, Not Harder</h2>
+            <p className="tagline">Your AI-powered Chief-of-Staff for productivity, clarity, and control.</p>
+            
+            <div className="stats-grid">
+              <div className="stat-box">
+                <CountUpAnimation end={10} suffix="K+" duration={2500} />
+                <div className="stat-label">Hours Saved</div>
+              </div>
+              <div className="stat-box">
+                <CountUpAnimation end={97} suffix="%" duration={2200} />
+                <div className="stat-label">Executive Satisfaction</div>
+              </div>
+              <div className="stat-box">
+                <CountUpAnimation end={24} suffix="/7" duration={2000} />
+                <div className="stat-label">AI Availability</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-value">Instant</div>
+                <div className="stat-label">Calendar & Email Sync</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

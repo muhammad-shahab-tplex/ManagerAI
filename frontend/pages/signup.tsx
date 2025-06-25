@@ -1,23 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
 
+// Count Up Animation Component
+const CountUpAnimation = ({ end, duration = 2000, suffix = '', prefix = '' }: {
+  end: number;
+  duration?: number;
+  suffix?: string;
+  prefix?: string;
+}) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          
+          const startTime = Date.now();
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Smoother easing function
+            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+            const currentCount = easeOutQuart * end;
+            
+            // Use decimal precision for ultra-smooth animation
+            setCount(Math.round(currentCount * 100) / 100);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            } else {
+              setCount(end);
+            }
+          };
+          
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [end, duration, hasAnimated]);
+
+  return (
+    <div ref={elementRef} className="stat-value">
+      {prefix}{Math.round(count)}{suffix}
+    </div>
+  );
+};
+
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    username: '',
     email: '',
     password: '',
-    confirmPassword: '',
     agreeToTerms: false
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const isFormValid = formData.firstName && formData.lastName && formData.email && formData.password && formData.confirmPassword && formData.agreeToTerms;
+  // Add signup-page class to body for CSS targeting
+  useEffect(() => {
+    document.body.classList.add('signup-page');
+    return () => {
+      document.body.classList.remove('signup-page');
+    };
+  }, []);
+
+  const isFormValid = formData.username && formData.email && formData.password && formData.agreeToTerms;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -31,13 +92,8 @@ const SignUpPage = () => {
     e.preventDefault();
     
     // Validation
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+    if (!formData.username || !formData.email || !formData.password) {
       setError('Please fill in all required fields');
-      return;
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
       return;
     }
     
@@ -67,6 +123,7 @@ const SignUpPage = () => {
       <Head>
         <title>Sign Up - ManagerAI</title>
         <meta name="description" content="Create your ManagerAI account" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </Head>
 
       <div className="auth-container">
@@ -89,32 +146,19 @@ const SignUpPage = () => {
             )}
 
             <form onSubmit={handleSubmit} className="signin-form">
-              <div className="form-row-group">
                 <div className="form-field">
-                  <label htmlFor="firstName">First Name</label>
+                <label htmlFor="username">Username</label>
                   <input
-                    id="firstName"
-                    name="firstName"
+                  id="username"
+                  name="username"
                     type="text"
-                    placeholder="Enter your first name"
-                    value={formData.firstName}
+                  placeholder="Enter your username"
+                  value={formData.username}
                     onChange={handleInputChange}
                     required
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="lastName">Last Name</label>
-                  <input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Enter your last name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
+                  aria-describedby="username-error"
+                  autoComplete="username"
+                />
               </div>
 
               <div className="form-field">
@@ -127,6 +171,8 @@ const SignUpPage = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
+                  aria-describedby="email-error"
+                  autoComplete="email"
                 />
               </div>
 
@@ -141,11 +187,15 @@ const SignUpPage = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
+                    aria-describedby="password-error"
+                    autoComplete="new-password"
                   />
                   <button
                     type="button"
                     className="password-toggle"
                     onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    tabIndex={0}
                   >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       {showPassword ? (
@@ -160,37 +210,9 @@ const SignUpPage = () => {
                 </div>
               </div>
 
-              <div className="form-field">
-                <label htmlFor="confirmPassword">Confirm Password</label>
-                <div className="password-wrapper">
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      {showConfirmPassword ? (
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                      ) : (
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      )}
-                      {!showConfirmPassword && <circle cx="12" cy="12" r="3"/>}
-                      {showConfirmPassword && <path d="m1 1 22 22"/>}
-                    </svg>
-                  </button>
-                </div>
-              </div>
 
-              <div className="terms-row">
+
+              <div className="form-row">
                 <label className="checkbox-wrapper">
                   <input
                     name="agreeToTerms"
@@ -237,8 +259,27 @@ const SignUpPage = () => {
         {/* Right Panel - Visual Content */}
         <div className="auth-right">
           <div className="visual-card">
-            <h2>Join thousands of professionals using AI to work smarter</h2>
-            <p>Experience the power of having an AI Chief-of-Staff that understands your business, manages your tasks, and helps you make better decisions every day.</p>
+            <h2>Manage Smarter, Not Harder</h2>
+            <p className="tagline">Your AI-powered Chief-of-Staff for productivity, clarity, and control.</p>
+            
+            <div className="stats-grid">
+              <div className="stat-box">
+                <CountUpAnimation end={10} suffix="K+" duration={2500} />
+                <div className="stat-label">Hours Saved</div>
+              </div>
+              <div className="stat-box">
+                <CountUpAnimation end={97} suffix="%" duration={2200} />
+                <div className="stat-label">Executive Satisfaction</div>
+              </div>
+              <div className="stat-box">
+                <CountUpAnimation end={24} suffix="/7" duration={2000} />
+                <div className="stat-label">AI Availability</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-value">Instant</div>
+                <div className="stat-label">Calendar & Email Sync</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

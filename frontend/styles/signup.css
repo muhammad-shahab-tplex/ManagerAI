@@ -3,9 +3,42 @@
 /* Import base auth styles */
 @import './signin.css';
 
-/* Signup-specific overrides and additions */
+/* Hide scroll bar for signup page */
+html, body {
+  overflow-y: hidden !important;
+}
 
-/* Form Row Group for First/Last Name */
+body {
+  overflow: hidden !important;
+}
+
+/* Signup-specific input field styling - independent of signin.css */
+.form-field input {
+  width: 100%;
+  height: 40px !important;
+  padding: 8px 12px !important;
+  min-height: 36px !important;
+  border: 2px solid #E0E0E0;
+  border-radius: 10px;
+  font-size: 16px;
+  background: #ffffff;
+  color: #1F1F1F;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #3A5EFF;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(58, 94, 255, 0.1);
+}
+
+.form-field input::placeholder {
+  color: #A0A0A0;
+}
+
+/* Form Row Group for Multiple Fields */
 .form-row-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -28,13 +61,8 @@
   align-items: flex-start;
 }
 
-.terms-row .checkbox-mark {
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
 .terms-link {
-  color: #007bff;
+  color: #3A5EFF;
   text-decoration: none;
   font-weight: 500;
 }
@@ -43,54 +71,20 @@
   text-decoration: underline;
 }
 
-/* Signup Visual Card Content */
-.auth-right .visual-card h2 {
-  font-size: 48px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 24px;
-  line-height: 1.1;
-  max-width: 400px;
+/* Signup-specific button styling - smaller buttons - only applies to signup page */
+body.signup-page .submit-btn {
+  height: 42px !important;
+  padding: 10px 32px !important;
 }
 
-.auth-right .visual-card p {
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
-  margin: 0;
-  max-width: 450px;
+body.signup-page .google-btn {
+  height: 42px !important;
+  padding: 10px 32px !important;
 }
 
-/* Responsive Design for Signup */
-@media (max-width: 768px) {
-  .form-row-group {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .form-row-group .form-field {
-    margin-bottom: 20px;
-  }
-  
-  .form-row-group .form-field:last-child {
-    margin-bottom: 0;
-  }
-  
-  .terms-row .checkbox-wrapper {
-    font-size: 13px;
-  }
+/* Move copyright text down slightly on signup page */
+body.signup-page .copyright {
+  margin-top: 25px !important;
 }
 
-@media (max-width: 480px) {
-  .terms-row .checkbox-wrapper {
-    font-size: 12px;
-  }
-  
-  .auth-right .visual-card h2 {
-    font-size: 20px;
-  }
-  
-  .auth-right .visual-card p {
-    font-size: 14px;
-  }
-} 
+ 
