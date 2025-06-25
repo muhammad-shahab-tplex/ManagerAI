@@ -82,6 +82,18 @@ const SignUpPage = () => {
     };
   }, []);
 
+  // Add showing-verification class when verification form is displayed
+  useEffect(() => {
+    if (showVerification) {
+      document.body.classList.add('showing-verification');
+    } else {
+      document.body.classList.remove('showing-verification');
+    }
+    return () => {
+      document.body.classList.remove('showing-verification');
+    };
+  }, [showVerification]);
+
   const isFormValid = formData.username && formData.email && formData.password && formData.agreeToTerms;
   const isVerificationComplete = verificationCode.every(digit => digit !== '');
 
@@ -120,6 +132,90 @@ const SignUpPage = () => {
     }, 1000);
   };
 
+  // API call to send verification code
+  const sendVerificationCode = async (email: string) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/send-verification-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send verification code');
+      }
+
+      console.log('Verification code sent:', data);
+      
+      // In development, log the code for testing
+      if (data.code) {
+        console.log('🔑 Verification Code:', data.code);
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Error sending verification code:', error);
+      throw error;
+    }
+  };
+
+  // API call to verify code
+  const verifyVerificationCode = async (email: string, code: string) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/verify-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to verify code');
+      }
+
+      return data.success;
+    } catch (error) {
+      console.error('Error verifying code:', error);
+      throw error;
+    }
+  };
+
+  // API call to register user
+  const registerUser = async (userData: any, verificationCode: string) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userData.username,
+          email: userData.email,
+          password: userData.password,
+          verificationCode: verificationCode
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error registering user:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -134,13 +230,33 @@ const SignUpPage = () => {
       setError('');
       
       try {
-        // Simulate verification API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Verification code:', verificationCode.join(''));
-        // Redirect to dashboard
+        const codeString = verificationCode.join('');
+        console.log('Verifying code:', codeString);
+        
+        // First verify the code
+        const isCodeValid = await verifyVerificationCode(formData.email, codeString);
+        
+        if (!isCodeValid) {
+          setError('Invalid verification code. Please try again.');
+          return;
+        }
+        
+        // If code is valid, register the user
+        const registerResult = await registerUser(formData, codeString);
+        
+        console.log('Registration successful:', registerResult);
+        
+        // Store the token if provided
+        if (registerResult.token) {
+          localStorage.setItem('token', registerResult.token);
+        }
+        
+        // Redirect to dashboard or success page
         window.location.href = '/';
-      } catch (err) {
-        setError('Invalid verification code. Please try again.');
+        
+      } catch (err: any) {
+        console.error('Verification/Registration error:', err);
+        setError(err.message || 'Invalid verification code. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -160,14 +276,18 @@ const SignUpPage = () => {
       setError('');
       
       try {
-        // Simulate signup API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log('Signup attempt:', formData);
+        console.log('Sending verification code to:', formData.email);
+        
+        // Send verification code
+        await sendVerificationCode(formData.email);
+        
         // Show verification form
         setShowVerification(true);
         startResendTimer();
-      } catch (err) {
-        setError('Signup failed. Please try again.');
+        
+      } catch (err: any) {
+        console.error('Signup error:', err);
+        setError(err.message || 'Failed to send verification code. Please try again.');
       } finally {
         setIsLoading(false);
       }
@@ -177,12 +297,17 @@ const SignUpPage = () => {
   const handleResendCode = async () => {
     if (resendTimer > 0) return;
     
+    setIsLoading(true);
+    
     try {
-      // Simulate resend API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      console.log('Resending verification code to:', formData.email);
+      await sendVerificationCode(formData.email);
       startResendTimer();
-    } catch (err) {
-      setError('Failed to resend code. Please try again.');
+    } catch (err: any) {
+      console.error('Resend error:', err);
+      setError(err.message || 'Failed to resend code. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 

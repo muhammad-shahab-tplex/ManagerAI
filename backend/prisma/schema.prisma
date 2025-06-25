@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5432/managerai"
+  url      = env("DATABASE_URL")
 }
 
 // User model
@@ -23,8 +23,6 @@ model User {
   role                 String             @default("user") @db.VarChar(20)
   subscriptionTier     String             @default("free") @db.VarChar(20) @map("subscription_tier")
   googleId             String?            @map("google_id") @db.VarChar(100)
-  microsoftId          String?            @map("microsoft_id") @db.VarChar(100)
-  githubId             String?            @map("github_id") @db.VarChar(100)
   resetPasswordToken   String?            @map("reset_password_token") @db.VarChar(200)
   resetPasswordExpire  DateTime?          @map("reset_password_expire")
   createdAt            DateTime           @default(now()) @map("created_at")
@@ -40,8 +38,6 @@ model User {
   @@map("users")
   @@index([email])
   @@index([googleId])
-  @@index([githubId])
-  @@index([microsoftId])
 }
 
 // User Preferences model

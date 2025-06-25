@@ -1,56 +1,41 @@
 import nodemailer from 'nodemailer';
-import { pool } from '../config/db';
+import { PrismaClient } from '../generated/prisma';
+
+// Initialize Prisma client
+const prisma = new PrismaClient();
+
+// In-memory storage for verification codes (fallback when DB is not available)
+interface VerificationCode {
+  email: string;
+  code: string;
+  expiresAt: Date;
+  verified: boolean;
+}
+
+const inMemoryVerificationCodes: VerificationCode[] = [];
 
 /**
  * Email service for sending verification codes and other emails
  */
 class EmailService {
   private transporter: nodemailer.Transporter;
-  private testAccount: any = null;
+  private useInMemoryStorage: boolean = false;
 
   constructor() {
-    // Initialize with a basic configuration that will be updated when createTransport is called
+    // Use the SMTP configuration from environment variables
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+      host: process.env.SMTP_HOST || 'smtp.ethereal.email',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_SECURE === 'true',
       auth: {
-        user: '',
-        pass: ''
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
       }
     });
     
-    // Create a test account
-    this.createTestTransport();
-  }
-
-  /**
-   * Create a test email transport using Ethereal
-   */
-  private async createTestTransport() {
-    try {
-      // Create a test account on ethereal.email
-      this.testAccount = await nodemailer.createTestAccount();
-      
-      console.log('Created Ethereal test account:');
-      console.log(`User: ${this.testAccount.user}`);
-      console.log(`Password: ${this.testAccount.pass}`);
-      
-      // Update the transporter with test account credentials
-      this.transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
-        port: 587,
-        secure: false,
-        auth: {
-          user: this.testAccount.user,
-          pass: this.testAccount.pass
-        }
-      });
-      
-      console.log('✅ Ethereal email transporter created successfully');
-    } catch (error) {
-      console.error('Error creating test account:', error);
-    }
+    console.log('✅ Email transporter created with SMTP configuration');
+    console.log(`SMTP Host: ${process.env.SMTP_HOST}`);
+    console.log(`SMTP User: ${process.env.SMTP_USER}`);
   }
 
   /**
@@ -69,55 +54,79 @@ class EmailService {
   }
 
   /**
-   * Save verification code to database
+   * Save verification code to database using Prisma or in-memory storage
    */
   private async saveVerificationCode(email: string, code: string): Promise<boolean> {
     try {
-      // Check if the verification_codes table exists
-      const tableCheck = await pool.query(`
-        SELECT EXISTS (
-          SELECT FROM information_schema.tables 
-          WHERE table_name = 'verification_codes'
-        );
-      `);
+      console.log(`Saving verification code ${code} for ${email}`);
       
-      if (!tableCheck.rows[0].exists) {
-        console.error('Verification_codes table does not exist');
-        // Create the table if it doesn't exist
-        await pool.query(`
-          CREATE TABLE IF NOT EXISTS verification_codes (
-            id SERIAL PRIMARY KEY,
-            email VARCHAR(100) NOT NULL,
-            code VARCHAR(6) NOT NULL,
-            created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-            expires_at TIMESTAMP NOT NULL,
-            verified BOOLEAN DEFAULT false,
-            UNIQUE(email, code)
-          );
-          CREATE INDEX IF NOT EXISTS idx_verification_codes_email ON verification_codes(email);
-          CREATE INDEX IF NOT EXISTS idx_verification_codes_code ON verification_codes(code);
-        `);
-        console.log('Created verification_codes table');
+      if (this.useInMemoryStorage) {
+        // Use in-memory storage
+        console.log('Using in-memory storage for verification codes');
+        
+        // Remove existing codes for this email
+        const index = inMemoryVerificationCodes.findIndex(vc => vc.email === email);
+        if (index !== -1) {
+          inMemoryVerificationCodes.splice(index, 1);
+        }
+        
+        // Add new code
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+        inMemoryVerificationCodes.push({
+          email,
+          code,
+          expiresAt,
+          verified: false
+        });
+        
+        console.log(`✅ Verification code ${code} saved to memory for ${email}`);
+        return true;
       }
+      
+      // Try database first
+      // Delete any existing codes for this email using raw SQL
+      await prisma.$executeRaw`DELETE FROM verification_codes WHERE email = ${email}`;
 
-      // Delete any existing codes for this email
-      await pool.query(
-        'DELETE FROM verification_codes WHERE email = $1',
-        [email]
-      );
+      // Calculate expiration time (15 minutes from now)
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-      // Insert new code with 15 minute expiration
-      await pool.query(
-        `INSERT INTO verification_codes (email, code, expires_at) 
-         VALUES ($1, $2, NOW() + INTERVAL '15 minutes')`,
-        [email, code]
-      );
+      // Insert new code using raw SQL
+      await prisma.$executeRaw`
+        INSERT INTO verification_codes (email, code, expires_at, verified) 
+        VALUES (${email}, ${code}, ${expiresAt}, false)
+      `;
 
-      console.log(`Verification code ${code} saved to database for ${email}`);
+      console.log(`✅ Verification code ${code} saved to database for ${email}`);
       return true;
     } catch (error) {
-      console.error('Error saving verification code:', error);
-      return false;
+      console.error('❌ Error saving verification code to database:', error);
+      
+      // Fall back to in-memory storage
+      console.log('Falling back to in-memory storage...');
+      this.useInMemoryStorage = true;
+      
+      try {
+        // Remove existing codes for this email
+        const index = inMemoryVerificationCodes.findIndex(vc => vc.email === email);
+        if (index !== -1) {
+          inMemoryVerificationCodes.splice(index, 1);
+        }
+        
+        // Add new code
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+        inMemoryVerificationCodes.push({
+          email,
+          code,
+          expiresAt,
+          verified: false
+        });
+        
+        console.log(`✅ Verification code ${code} saved to memory for ${email}`);
+        return true;
+      } catch (memoryError) {
+        console.error('❌ Failed to save to memory:', memoryError);
+        return false;
+      }
     }
   }
 
@@ -135,39 +144,29 @@ class EmailService {
       console.log(`🔑 VERIFICATION CODE FOR ${email}: ${code} 🔑`);
       console.log('==================================================\n');
 
-      // Save to database
+      // Save to database or memory
       const savedToDb = await this.saveVerificationCode(email, code);
       if (!savedToDb) {
-        console.error('Failed to save verification code to database');
-        return { 
-          success: false, 
-          message: 'Error saving verification code' 
-        };
-      }
-
-      // During development, don't actually try to send emails
-      if (process.env.NODE_ENV !== 'production' || !this.testAccount) {
-        return {
-          success: true,
-          message: 'Verification code generated for testing',
-          code: code
-        };
+        console.error('Failed to save verification code, but continuing...');
+        // Don't fail completely, still return the code for development
       }
 
       // Prepare the email
       const mailOptions: nodemailer.SendMailOptions = {
-        from: `"YourManager AI" <${this.testAccount.user}>`,
+        from: process.env.EMAIL_FROM || `"ManagerAI" <${process.env.SMTP_USER}>`,
         to: email,
-        subject: 'Your Verification Code',
+        subject: 'Your ManagerAI Verification Code',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2>Your Verification Code</h2>
+            <h2 style="color: #1F1F1F;">Your ManagerAI Verification Code</h2>
             <p>Please use the following code to verify your email address:</p>
-            <div style="background-color: #f4f4f4; padding: 15px; font-size: 24px; text-align: center; letter-spacing: 5px; font-weight: bold;">
+            <div style="background-color: #f4f4f4; padding: 20px; font-size: 32px; text-align: center; letter-spacing: 8px; font-weight: bold; border-radius: 8px; margin: 20px 0;">
               ${code}
             </div>
             <p>This code will expire in 15 minutes.</p>
             <p>If you didn't request this code, please ignore this email.</p>
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+            <p style="color: #888; font-size: 14px;">© 2024 ManagerAI. All rights reserved.</p>
           </div>
         `
       };
@@ -181,9 +180,11 @@ class EmailService {
         console.log('Email sent successfully!');
         console.log('Message ID:', info.messageId);
         
-        // Get the test URL for viewing the email
-        const previewUrl = nodemailer.getTestMessageUrl(info);
-        console.log('Preview URL:', previewUrl);
+        // Get the test URL for viewing the email (if using Ethereal)
+        if (process.env.SMTP_HOST === 'smtp.ethereal.email') {
+          const previewUrl = nodemailer.getTestMessageUrl(info);
+          console.log('Preview URL:', previewUrl);
+        }
         
         return { 
           success: true, 
@@ -191,8 +192,8 @@ class EmailService {
           code: process.env.NODE_ENV !== 'production' ? code : undefined
         };
       } catch (emailError) {
-        console.error('Error sending email, falling back to code in response:', emailError);
-        // Still return success with the code for development
+        console.error('Error sending email:', emailError);
+        // For development, still return success with the code
         return { 
           success: true, 
           message: 'Could not send email, but verification code is in the response',
@@ -213,7 +214,7 @@ class EmailService {
   }
 
   /**
-   * Verify a code for a specific email
+   * Verify a code for a specific email using Prisma or in-memory storage
    */
   async verifyCode(email: string, code: string): Promise<boolean> {
     try {
@@ -225,28 +226,83 @@ class EmailService {
         return true;
       }
       
-      const result = await pool.query(
-        `SELECT * FROM verification_codes 
-         WHERE email = $1 AND code = $2 AND expires_at > NOW() AND verified = false`,
-        [email, code]
-      );
+      if (this.useInMemoryStorage) {
+        // Use in-memory storage
+        console.log('Using in-memory storage for verification');
+        
+        const verificationCode = inMemoryVerificationCodes.find(
+          vc => vc.email === email && vc.code === code && !vc.verified && vc.expiresAt > new Date()
+        );
+        
+        if (!verificationCode) {
+          console.log('No matching verification code found in memory');
+          return false;
+        }
+        
+        // Mark as verified
+        verificationCode.verified = true;
+        console.log('Code verified successfully from memory');
+        return true;
+      }
+      
+      // Check if code exists and is not expired using raw SQL
+      const result = await prisma.$queryRaw`
+        SELECT * FROM verification_codes 
+        WHERE email = ${email} AND code = ${code} AND expires_at > NOW() AND verified = false
+      ` as any[];
 
-      if (result.rows.length === 0) {
+      if (result.length === 0) {
         console.log('No matching verification code found');
         return false;
       }
 
       // Mark code as verified
-      await pool.query(
-        'UPDATE verification_codes SET verified = true WHERE email = $1 AND code = $2',
-        [email, code]
-      );
+      await prisma.$executeRaw`
+        UPDATE verification_codes SET verified = true WHERE email = ${email} AND code = ${code}
+      `;
       
       console.log('Code verified successfully');
       return true;
     } catch (error) {
       console.error('Error verifying code:', error);
+      
+      // Fall back to in-memory storage
+      this.useInMemoryStorage = true;
+      
+      // In development, return true anyway
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Development mode: Returning true despite error');
+        return true;
+      }
       return false;
+    }
+  }
+
+  /**
+   * Clean up expired verification codes
+   */
+  async cleanupExpiredCodes(): Promise<void> {
+    try {
+      if (this.useInMemoryStorage) {
+        // Clean up in-memory codes
+        const now = new Date();
+        const beforeCount = inMemoryVerificationCodes.length;
+        
+        for (let i = inMemoryVerificationCodes.length - 1; i >= 0; i--) {
+          if (inMemoryVerificationCodes[i].expiresAt < now) {
+            inMemoryVerificationCodes.splice(i, 1);
+          }
+        }
+        
+        const afterCount = inMemoryVerificationCodes.length;
+        console.log(`Cleaned up ${beforeCount - afterCount} expired verification codes from memory`);
+        return;
+      }
+      
+      await prisma.$executeRaw`DELETE FROM verification_codes WHERE expires_at < NOW()`;
+      console.log(`Cleaned up expired verification codes`);
+    } catch (error) {
+      console.error('Error cleaning up expired codes:', error);
     }
   }
 }

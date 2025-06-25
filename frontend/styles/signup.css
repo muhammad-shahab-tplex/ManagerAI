@@ -13,7 +13,8 @@ body {
 }
 
 /* Signup-specific input field styling - independent of signin.css */
-.form-field input {
+/* Only apply to regular form inputs, not verification inputs */
+body.signup-page .form-field input:not(.verification-input) {
   width: 100%;
   height: 40px !important;
   padding: 8px 12px !important;
@@ -27,14 +28,14 @@ body {
   box-sizing: border-box;
 }
 
-.form-field input:focus {
+body.signup-page .form-field input:not(.verification-input):focus {
   outline: none;
   border-color: #3A5EFF;
   background: #FFFFFF;
   box-shadow: 0 2px 8px rgba(58, 94, 255, 0.1);
 }
 
-.form-field input::placeholder {
+body.signup-page .form-field input:not(.verification-input)::placeholder {
   color: #A0A0A0;
 }
 
@@ -51,11 +52,11 @@ body {
 }
 
 /* Terms Row */
-.terms-row {
+body.signup-page:not(.showing-verification) .terms-row {
   margin-bottom: 24px;
 }
 
-.terms-row .checkbox-wrapper {
+body.signup-page:not(.showing-verification) .terms-row .checkbox-wrapper {
   font-size: 14px;
   line-height: 1.4;
   align-items: flex-start;
@@ -95,32 +96,33 @@ body.signup-page .copyright {
   margin-bottom: 20px;
 }
 
-/* Center verification form content */
-body.signup-page .form-header {
+/* Center verification form content - only when showing verification */
+body.signup-page.showing-verification .form-header {
   text-align: center !important;
 }
 
-body.signup-page .form-header h1 {
+body.signup-page.showing-verification .form-header h1 {
   text-align: center !important;
 }
 
-body.signup-page .form-header p {
+body.signup-page.showing-verification .form-header p {
   text-align: center !important;
 }
 
-.form-field label {
+body.signup-page.showing-verification .form-field label {
   text-align: center !important;
   display: block !important;
   width: 100% !important;
 }
 
-body.signup-page .verification-input,
+/* Verification input styling - only applies to verification inputs */
+body.signup-page.showing-verification .verification-input,
 .verification-inputs .verification-input,
 input.verification-input {
   width: 50px !important;
   height: 60px !important;
-  min-height: 50px !important;
-  max-height: 50px !important;
+  min-height: 60px !important;
+  max-height: 60px !important;
   text-align: center !important;
   font-size: 20px !important;
   font-weight: 600 !important;
@@ -133,7 +135,7 @@ input.verification-input {
   padding: 0 !important;
 }
 
-body.signup-page .verification-input:focus,
+body.signup-page.showing-verification .verification-input:focus,
 .verification-inputs .verification-input:focus,
 input.verification-input:focus {
   outline: none !important;
@@ -175,21 +177,38 @@ input.verification-input:focus {
   font-size: 14px;
 }
 
-/* Keep terms notice on single line */
-body.signup-page .terms-notice {
+/* Keep terms notice on single line - only for verification state */
+body.signup-page.showing-verification .terms-notice {
   white-space: nowrap !important;
   font-size: 14px !important;
   line-height: 1.2 !important;
   margin-bottom: 5px !important;
 }
 
-/* Reduce spacing between terms and copyright */
-body.signup-page .copyright {
+/* Reduce spacing between terms and copyright - only for verification state */
+body.signup-page.showing-verification .copyright {
   margin-top: 5px !important;
 }
 
-/* Move entire verification form downward */
-body.signup-page .form-content {
+/* Normal signup form styling */
+body.signup-page:not(.showing-verification) .form-header {
+  text-align: left !important;
+}
+
+body.signup-page:not(.showing-verification) .form-header h1 {
+  text-align: left !important;
+}
+
+body.signup-page:not(.showing-verification) .form-header p {
+  text-align: left !important;
+}
+
+body.signup-page:not(.showing-verification) .form-field label {
+  text-align: left !important;
+}
+
+/* Move entire verification form downward - only when showing verification */
+body.signup-page.showing-verification .form-content {
   margin-top: 30px !important;
 }
 
