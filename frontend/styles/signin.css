@@ -7,8 +7,9 @@
   box-sizing: border-box;
 }
 
-/* Ensure body and html allow overflow for negative margins */
-html, body {
+/* Ensure body and html allow overflow for negative margins - only on signin page */
+body.signin-page,
+body.signin-page html {
   overflow-x: hidden;
   overflow-y: auto;
   height: 100%;

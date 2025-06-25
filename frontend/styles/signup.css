@@ -3,13 +3,13 @@
 /* Import base auth styles */
 @import './signin.css';
 
-/* Hide scroll bar for signup page */
-html, body {
-  overflow-y: hidden !important;
+/* Hide scroll bar for signup page only */
+body.signup-page {
+  overflow: hidden !important;
 }
 
-body {
-  overflow: hidden !important;
+body.signup-page html {
+  overflow-y: hidden !important;
 }
 
 /* Signup-specific input field styling - independent of signin.css */

@@ -72,6 +72,12 @@ const SignInPage = () => {
 
   const isFormValid = formData.email && formData.password;
 
+  // Add signin-page class to body for CSS targeting
+  useEffect(() => {
+    document.body.classList.add('signin-page');
+    return () => document.body.classList.remove('signin-page');
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -92,13 +98,40 @@ const SignInPage = () => {
     setError('');
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Login attempt:', formData);
-      // Redirect to dashboard
+      // Call the login API
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Login failed');
+      }
+
+      console.log('Login successful:', result);
+
+      // Store both token and user data
+      if (result.token) {
+        localStorage.setItem('token', result.token);
+      }
+      
+      if (result.user) {
+        localStorage.setItem('user', JSON.stringify(result.user));
+      }
+
+      // Redirect to homepage
       window.location.href = '/';
-    } catch (err) {
-      setError('Invalid credentials. Please try again.');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      setError(err.message || 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
     }

@@ -246,12 +246,16 @@ const SignUpPage = () => {
         
         console.log('Registration successful:', registerResult);
         
-        // Store the token if provided
+        // Store both token and user data
         if (registerResult.token) {
           localStorage.setItem('token', registerResult.token);
         }
         
-        // Redirect to dashboard or success page
+        if (registerResult.user) {
+          localStorage.setItem('user', JSON.stringify(registerResult.user));
+        }
+        
+        // Redirect to homepage
         window.location.href = '/';
         
       } catch (err: any) {
