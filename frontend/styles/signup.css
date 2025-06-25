@@ -87,4 +87,110 @@ body.signup-page .copyright {
   margin-top: 25px !important;
 }
 
+/* Verification Code Styling */
+.verification-inputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Center verification form content */
+body.signup-page .form-header {
+  text-align: center !important;
+}
+
+body.signup-page .form-header h1 {
+  text-align: center !important;
+}
+
+body.signup-page .form-header p {
+  text-align: center !important;
+}
+
+.form-field label {
+  text-align: center !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+body.signup-page .verification-input,
+.verification-inputs .verification-input,
+input.verification-input {
+  width: 50px !important;
+  height: 60px !important;
+  min-height: 50px !important;
+  max-height: 50px !important;
+  text-align: center !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  border: 2px solid #E0E0E0 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #1F1F1F !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+}
+
+body.signup-page .verification-input:focus,
+.verification-inputs .verification-input:focus,
+input.verification-input:focus {
+  outline: none !important;
+  border-color: #3A5EFF !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(58, 94, 255, 0.1) !important;
+  height: 60px !important;
+  min-height: 60px !important;
+}
+
+.resend-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.resend-section p {
+  font-size: 14px;
+  color: #555555;
+  margin: 0;
+}
+
+.resend-link {
+  background: none;
+  border: none;
+  color: #3A5EFF;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.resend-link:hover {
+  text-decoration: underline;
+}
+
+.resend-timer {
+  color: #888888;
+  font-size: 14px;
+}
+
+/* Keep terms notice on single line */
+body.signup-page .terms-notice {
+  white-space: nowrap !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  margin-bottom: 5px !important;
+}
+
+/* Reduce spacing between terms and copyright */
+body.signup-page .copyright {
+  margin-top: 5px !important;
+}
+
+/* Move entire verification form downward */
+body.signup-page .form-content {
+  margin-top: 30px !important;
+}
+
  

@@ -224,7 +224,7 @@ body:not(.signup-page) .auth-container .form-field input:focus {
   font-size: 16px;
   color: #555555;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 0%;
 }
 
 .checkbox-wrapper input[type="checkbox"] {

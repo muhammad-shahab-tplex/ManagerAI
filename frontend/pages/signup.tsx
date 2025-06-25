@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '../components/Logo';
+import { IoEye, IoEyeOff } from 'react-icons/io5';
 
 // Count Up Animation Component
 const CountUpAnimation = ({ end, duration = 2000, suffix = '', prefix = '' }: {
@@ -69,6 +70,9 @@ const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showVerification, setShowVerification] = useState(false);
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [resendTimer, setResendTimer] = useState(0);
 
   // Add signup-page class to body for CSS targeting
   useEffect(() => {
@@ -79,6 +83,7 @@ const SignUpPage = () => {
   }, []);
 
   const isFormValid = formData.username && formData.email && formData.password && formData.agreeToTerms;
+  const isVerificationComplete = verificationCode.every(digit => digit !== '');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -88,33 +93,96 @@ const SignUpPage = () => {
     }));
   };
 
+  const handleVerificationChange = (index: number, value: string) => {
+    if (value.length <= 1 && /^\d*$/.test(value)) {
+      const newCode = [...verificationCode];
+      newCode[index] = value;
+      setVerificationCode(newCode);
+      
+      // Auto-focus next input
+      if (value && index < 5) {
+        const nextInput = document.getElementById(`verification-${index + 1}`);
+        nextInput?.focus();
+      }
+    }
+  };
+
+  const startResendTimer = () => {
+    setResendTimer(57);
+    const timer = setInterval(() => {
+      setResendTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
-    if (!formData.username || !formData.email || !formData.password) {
-      setError('Please fill in all required fields');
-      return;
+    if (showVerification) {
+      // Handle verification code submission
+      if (!isVerificationComplete) {
+        setError('Please enter the complete verification code');
+        return;
+      }
+      
+      setIsLoading(true);
+      setError('');
+      
+      try {
+        // Simulate verification API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Verification code:', verificationCode.join(''));
+        // Redirect to dashboard
+        window.location.href = '/';
+      } catch (err) {
+        setError('Invalid verification code. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Handle initial signup
+      if (!formData.username || !formData.email || !formData.password) {
+        setError('Please fill in all required fields');
+        return;
+      }
+      
+      if (!formData.agreeToTerms) {
+        setError('Please agree to the Terms of Service');
+        return;
+      }
+      
+      setIsLoading(true);
+      setError('');
+      
+      try {
+        // Simulate signup API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Signup attempt:', formData);
+        // Show verification form
+        setShowVerification(true);
+        startResendTimer();
+      } catch (err) {
+        setError('Signup failed. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
-    
-    if (!formData.agreeToTerms) {
-      setError('Please agree to the Terms of Service');
-      return;
-    }
-    
-    setIsLoading(true);
-    setError('');
+  };
+
+  const handleResendCode = async () => {
+    if (resendTimer > 0) return;
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Signup attempt:', formData);
-      // Redirect to dashboard or verification page
-      window.location.href = '/';
+      // Simulate resend API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      startResendTimer();
     } catch (err) {
-      setError('Signup failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setError('Failed to resend code. Please try again.');
     }
   };
 
@@ -134,18 +202,81 @@ const SignUpPage = () => {
 
           {/* Centered Form Content */}
           <div className="form-content">
-            <div className="form-header">
-              <h1>Create your account</h1>
-              <p>Get started with your AI Chief-of-Staff today.</p>
-            </div>
+{showVerification ? (
+              <>
+                <div className="form-header">
+                  <h1>Verify your email</h1>
+                  <p>We've sent a 6-digit verification code to<br/><strong>{formData.email}</strong></p>
+                </div>
 
-            {error && (
-              <div className="error-message">
-                {error}
-              </div>
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="form-header">
+                  <h1>Create your account</h1>
+                  <p>Get started with your AI Chief-of-Staff today.</p>
+                </div>
+
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+              </>
             )}
 
-            <form onSubmit={handleSubmit} className="signin-form">
+            {showVerification ? (
+              <form onSubmit={handleSubmit} className="signin-form">
+                <div className="form-field">
+                  <label htmlFor="verification-code">Enter verification code</label>
+                  <div className="verification-inputs">
+                    {verificationCode.map((digit, index) => (
+                      <input
+                        key={index}
+                        id={`verification-${index}`}
+                        type="text"
+                        maxLength={1}
+                        value={digit}
+                        onChange={(e) => handleVerificationChange(index, e.target.value)}
+                        className="verification-input"
+                        autoComplete="off"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="resend-section">
+                  <p>
+                    Didn't receive a code?{' '}
+                    {resendTimer > 0 ? (
+                      <span className="resend-timer">Resend code in {resendTimer}s</span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleResendCode}
+                        className="resend-link"
+                      >
+                        Resend code
+                      </button>
+                    )}
+                  </p>
+                </div>
+
+                <button 
+                  type="submit" 
+                  className={`submit-btn ${isVerificationComplete ? 'active' : ''}`}
+                  disabled={isLoading || !isVerificationComplete}
+                >
+                  {isLoading ? 'Verifying...' : 'Verify and Continue'}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleSubmit} className="signin-form">
                 <div className="form-field">
                 <label htmlFor="username">Username</label>
                   <input
@@ -197,15 +328,11 @@ const SignUpPage = () => {
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     tabIndex={0}
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      {showPassword ? (
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                      ) : (
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      )}
-                      {!showPassword && <circle cx="12" cy="12" r="3"/>}
-                      {showPassword && <path d="m1 1 22 22"/>}
-                    </svg>
+                    {showPassword ? (
+                      <IoEyeOff size={20} color="#000000" />
+                    ) : (
+                      <IoEye size={20} color="#000000" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -232,26 +359,46 @@ const SignUpPage = () => {
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
+            )}
 
-            <div className="divider">
-              <span>or</span>
-            </div>
+{!showVerification && (
+              <>
+                <div className="divider">
+                  <span>or</span>
+                </div>
 
-            <button className="google-btn" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Continue with Google
-            </button>
+                <button className="google-btn" type="button">
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  </svg>
+                  Continue with Google
+                </button>
+              </>
+            )}
 
-            <div className="auth-footer">
-              <p>Already have an account? <Link href="/signin" className="signup-link">Sign in</Link></p>
-              <div className="copyright">
-                © 2024 ManagerAI. All rights reserved.
-              </div>
+<div className="auth-footer">
+              {showVerification ? (
+                <>
+                  <p className="terms-notice">
+                    By continuing, you agree to ManagerAI's{' '}
+                    <Link href="/terms" className="terms-link">Terms of Service</Link> &{' '}
+                    <Link href="/privacy" className="terms-link">Privacy Policy</Link>.
+                  </p>
+                  <div className="copyright">
+                    © 2024 ManagerAI. All rights reserved.
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>Already have an account? <Link href="/signin" className="signup-link">Sign in</Link></p>
+                  <div className="copyright">
+                    © 2024 ManagerAI. All rights reserved.
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
