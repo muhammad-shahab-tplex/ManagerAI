@@ -1,5 +1,0 @@
-# Generated Prisma client
-../src/generated/
- 
-# Keep migration files
-!migrations/**/* 

@@ -171,6 +171,16 @@ class EmailService {
         `
       };
 
+      // In development mode, skip email sending for faster response
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Development mode: Skipping email sending for faster response');
+        return { 
+          success: true, 
+          message: 'Verification code generated (development mode)',
+          code: code
+        };
+      }
+      
       console.log('Sending verification email...');
       
       try {
