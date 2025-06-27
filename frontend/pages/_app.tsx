@@ -15,18 +15,24 @@ import '../styles/roadmap.css';
 import '../styles/features.css';
 import '../styles/pricing.css';
 import '../styles/AccountModal.css';
+import '../styles/dashboard.css';
 import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isAuthPage = router.pathname === '/signin' || router.pathname === '/signup';
+  const isDashboardPage = router.pathname === '/dashboard';
   
   useEffect(() => {
     if (isAuthPage) {
       // Ensure the body doesn't scroll on auth pages
       document.body.style.overflow = 'hidden';
       document.body.style.height = '100vh';
+    } else if (isDashboardPage) {
+      // Dashboard has its own layout
+      document.body.style.overflow = 'auto';
+      document.body.style.height = 'auto';
     } else {
       document.body.style.overflow = 'auto';
       document.body.style.height = 'auto';
@@ -36,7 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       document.body.style.overflow = 'auto';
       document.body.style.height = 'auto';
     };
-  }, [isAuthPage]);
+  }, [isAuthPage, isDashboardPage]);
   
   // Page transition variants
   const pageVariants = {
@@ -63,7 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* Simple morphing background */}
       <div className="morphing-background"></div>
       
-      {!isAuthPage && <Navbar />}
+      {!isAuthPage && !isDashboardPage && <Navbar />}
       <AnimatePresence mode="wait">
         <motion.main
           key={router.route}
@@ -76,7 +82,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         </motion.main>
       </AnimatePresence>
-      {!isAuthPage && <Footer />}
+      {!isAuthPage && !isDashboardPage && <Footer />}
     </>
   );
 }

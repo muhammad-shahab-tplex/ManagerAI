@@ -274,6 +274,13 @@ main {
   padding-top: 80px;
 }
 
+/* Dashboard pages should have no top padding since they don't have navbar */
+.dashboard-wrapper,
+.dashboard-wrapper main {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
 @media screen and (max-width: 960px) {
   .navbar-scrolled {
     margin: 12px 40px 0 40px;

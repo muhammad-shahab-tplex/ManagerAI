@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { 
+  RiDashboardLine, 
+  RiTaskLine, 
+  RiCalendarLine, 
+  RiBarChartLine, 
+  RiTeamLine, 
+  RiSettingsLine, 
+  RiQuestionLine, 
+  RiLogoutBoxLine,
+  RiAppsLine
+} from 'react-icons/ri';
 
 const Dashboard: React.FC = () => {
   const router = useRouter();
@@ -19,7 +30,7 @@ const Dashboard: React.FC = () => {
 
     // For now, we'll just show a welcome message
     // In a real app, you'd fetch user data from the API
-    setUser({ name: 'User' }); // Placeholder
+    setUser({ name: 'User', email: 'user@example.com' }); // Placeholder
     setIsLoading(false);
   }, [router]);
 
@@ -30,13 +41,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontFamily: 'Inter, sans-serif'
-      }}>
+      <div className="loading-container">
         Loading...
       </div>
     );
@@ -45,271 +50,305 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Dashboard - ManagerAI</title>
-        <meta name="description" content="Your ManagerAI Dashboard" />
+        <title>Dashboard - Donezo</title>
+        <meta name="description" content="Your AI Chief-of-Staff Dashboard" />
       </Head>
 
-      <div style={{
-        minHeight: '100vh',
-        backgroundColor: '#f8fafc',
-        fontFamily: 'Inter, sans-serif'
-      }}>
-        {/* Header */}
-        <header style={{
-          backgroundColor: 'white',
-          borderBottom: '1px solid #e2e8f0',
-          padding: '1rem 2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <h1 style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#1f2937',
-            margin: 0
-          }}>
-            ManagerAI Dashboard
-          </h1>
-          
-          <button
-            onClick={handleLogout}
-            style={{
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '0.375rem',
-              cursor: 'pointer',
-              fontSize: '0.875rem',
-              fontWeight: '500'
-            }}
-          >
-            Logout
-          </button>
-        </header>
+      <div className="dashboard-wrapper">
+        {/* Sidebar */}
+        <aside className="sidebar">
+          <div className="sidebar-header">
+            <div className="logo">
+              <div className="logo-icon">
+                <RiAppsLine />
+              </div>
+              <span className="logo-text">Donezo</span>
+            </div>
+          </div>
+
+          <nav className="sidebar-nav">
+            <div className="nav-section">
+              <span className="nav-section-title">MENU</span>
+              <ul className="nav-list">
+                <li className="nav-item active">
+                  <span className="nav-icon">
+                    <RiDashboardLine />
+                  </span>
+                  Dashboard
+                </li>
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiTaskLine />
+                  </span>
+                  Tasks
+                  <span className="nav-badge">24</span>
+                </li>
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiCalendarLine />
+                  </span>
+                  Calendar
+                </li>
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiBarChartLine />
+                  </span>
+                  Analytics
+                </li>
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiTeamLine />
+                  </span>
+                  Team
+                </li>
+              </ul>
+            </div>
+
+            <div className="nav-section">
+              <span className="nav-section-title">GENERAL</span>
+              <ul className="nav-list">
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiSettingsLine />
+                  </span>
+                  Settings
+                </li>
+                <li className="nav-item">
+                  <span className="nav-icon">
+                    <RiQuestionLine />
+                  </span>
+                  Help
+                </li>
+                <li className="nav-item" onClick={handleLogout}>
+                  <span className="nav-icon">
+                    <RiLogoutBoxLine />
+                  </span>
+                  Logout
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+
+        </aside>
 
         {/* Main Content */}
-        <main style={{
-          padding: '2rem',
-          maxWidth: '1200px',
-          margin: '0 auto'
-        }}>
-          {/* Welcome Section */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '0.5rem',
-            padding: '2rem',
-            marginBottom: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-          }}>
-            <h2 style={{
-              fontSize: '1.875rem',
-              fontWeight: '700',
-              color: '#1f2937',
-              marginBottom: '1rem'
-            }}>
-              🎉 Welcome to ManagerAI!
-            </h2>
-            <p style={{
-              color: '#6b7280',
-              fontSize: '1.125rem',
-              lineHeight: '1.75',
-              marginBottom: '1.5rem'
-            }}>
-              Your account has been successfully created. You now have access to your AI Chief-of-Staff that will help you save 10+ hours per week.
-            </p>
-            
-            <div style={{
-              backgroundColor: '#dbeafe',
-              border: '1px solid #3b82f6',
-              borderRadius: '0.375rem',
-              padding: '1rem',
-              marginBottom: '1.5rem'
-            }}>
-              <p style={{
-                color: '#1e40af',
-                fontSize: '0.875rem',
-                margin: 0
-              }}>
-                <strong>🚀 Getting Started:</strong> Your AI assistant is ready to help with email management, calendar organization, and daily briefings.
-              </p>
+        <main className="main-content">
+          {/* Header */}
+          <header className="dashboard-header">
+            <div className="header-left">
+              <div className="search-container">
+                <span className="search-icon">🔍</span>
+                <input type="text" placeholder="Search task" className="search-input" />
+                <span className="search-shortcut">⌘F</span>
+              </div>
             </div>
-          </div>
-
-          {/* Features Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem',
-            marginBottom: '2rem'
-          }}>
-            {/* Email Management */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '0.5rem',
-              padding: '1.5rem',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '1rem'
-              }}>
-                <div style={{
-                  backgroundColor: '#dbeafe',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem',
-                  marginRight: '1rem'
-                }}>
-                  📧
+            <div className="header-right">
+              <button className="header-btn">📧</button>
+              <button className="header-btn">🔔</button>
+              <div className="user-profile">
+                <img src="/api/placeholder/32/32" alt="User" className="user-avatar" />
+                <div className="user-info">
+                  <span className="user-name">Totok Michael</span>
+                  <span className="user-email">tmichael20@mail.com</span>
                 </div>
-                <h3 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: '600',
-                  color: '#1f2937',
-                  margin: 0
-                }}>
-                  Email Management
-                </h3>
               </div>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-                margin: 0
-              }}>
-                Connect your email to get smart digests and AI-generated replies that match your writing style.
-              </p>
+            </div>
+          </header>
+
+          {/* Dashboard Content */}
+          <div className="dashboard-content">
+            <div className="page-header">
+              <div className="page-header-left">
+                <h1 className="page-title">Dashboard</h1>
+                <p className="page-subtitle">Plan, prioritize, and accomplish your tasks with AI assistance.</p>
+              </div>
+              <div className="page-actions">
+                <button className="btn btn-primary">+ Add Task</button>
+                <button className="btn btn-secondary">Import Data</button>
+              </div>
             </div>
 
-            {/* Calendar Organization */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '0.5rem',
-              padding: '1.5rem',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '1rem'
-              }}>
-                <div style={{
-                  backgroundColor: '#dcfce7',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem',
-                  marginRight: '1rem'
-                }}>
-                  📅
+            {/* Stats Cards */}
+            <div className="stats-grid">
+              <div className="stat-card primary">
+                <div className="stat-header">
+                  <h3>Tasks Managed by AI</h3>
+                  <span className="stat-icon">📋</span>
                 </div>
-                <h3 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: '600',
-                  color: '#1f2937',
-                  margin: 0
-                }}>
-                  Calendar Organization
-                </h3>
-              </div>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-                margin: 0
-              }}>
-                Optimize your schedule with intelligent meeting planning and focus time blocks.
-              </p>
-            </div>
-
-            {/* Daily Briefings */}
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '0.5rem',
-              padding: '1.5rem',
-              boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                marginBottom: '1rem'
-              }}>
-                <div style={{
-                  backgroundColor: '#fef3c7',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem',
-                  marginRight: '1rem'
-                }}>
-                  📋
+                <div className="stat-value">156</div>
+                <div className="stat-change positive">
+                  <span className="change-icon">📈</span>
+                  Increased from last month
                 </div>
-                <h3 style={{
-                  fontSize: '1.125rem',
-                  fontWeight: '600',
-                  color: '#1f2937',
-                  margin: 0
-                }}>
-                  Daily Briefings
-                </h3>
               </div>
-              <p style={{
-                color: '#6b7280',
-                fontSize: '0.875rem',
-                lineHeight: '1.5',
-                margin: 0
-              }}>
-                Start each day with a personalized summary of your priorities and upcoming tasks.
-              </p>
-            </div>
-          </div>
 
-          {/* Next Steps */}
-          <div style={{
-            backgroundColor: 'white',
-            borderRadius: '0.5rem',
-            padding: '2rem',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-          }}>
-            <h3 style={{
-              fontSize: '1.25rem',
-              fontWeight: '600',
-              color: '#1f2937',
-              marginBottom: '1rem'
-            }}>
-              🎯 Next Steps
-            </h3>
-            <div style={{
-              display: 'grid',
-              gap: '0.75rem'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0.75rem',
-                backgroundColor: '#f9fafb',
-                borderRadius: '0.375rem'
-              }}>
-                <span style={{ marginRight: '0.75rem' }}>1️⃣</span>
-                <span style={{ color: '#374151' }}>Connect your email account (Coming Soon)</span>
+              <div className="stat-card">
+                <div className="stat-header">
+                  <h3>Focus Sessions Completed</h3>
+                  <span className="stat-icon">⏱️</span>
+                </div>
+                <div className="stat-value">42</div>
+                <div className="stat-change positive">
+                  <span className="change-icon">📈</span>
+                  Increased from last month
+                </div>
               </div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0.75rem',
-                backgroundColor: '#f9fafb',
-                borderRadius: '0.375rem'
-              }}>
-                <span style={{ marginRight: '0.75rem' }}>2️⃣</span>
-                <span style={{ color: '#374151' }}>Set up your calendar integration (Coming Soon)</span>
+
+              <div className="stat-card">
+                <div className="stat-header">
+                  <h3>Smart Replies Sent</h3>
+                  <span className="stat-icon">💬</span>
+                </div>
+                <div className="stat-value">89</div>
+                <div className="stat-change positive">
+                  <span className="change-icon">📈</span>
+                  Increased from last month
+                </div>
               </div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0.75rem',
-                backgroundColor: '#f9fafb',
-                borderRadius: '0.375rem'
-              }}>
-                <span style={{ marginRight: '0.75rem' }}>3️⃣</span>
-                <span style={{ color: '#374151' }}>Customize your AI assistant preferences (Coming Soon)</span>
+
+              <div className="stat-card">
+                <div className="stat-header">
+                  <h3>Inbox Summarized</h3>
+                  <span className="stat-icon">📨</span>
+                </div>
+                <div className="stat-value">7</div>
+                <div className="stat-change neutral">
+                  On Discuss
+                </div>
+              </div>
+            </div>
+
+            {/* Dashboard Grid */}
+            <div className="dashboard-grid">
+              {/* Left Column */}
+              <div className="dashboard-left">
+                {/* AI Usage Analytics */}
+                <div className="dashboard-card analytics-card">
+                  <h3>AI Usage Analytics</h3>
+                  <div className="chart-container">
+                    <div className="chart">
+                      <div className="chart-bars">
+                        <div className="chart-bar" style={{height: '60%'}}></div>
+                        <div className="chart-bar" style={{height: '80%'}}></div>
+                        <div className="chart-bar" style={{height: '70%'}}></div>
+                        <div className="chart-bar" style={{height: '90%'}}></div>
+                        <div className="chart-bar" style={{height: '65%'}}></div>
+                        <div className="chart-bar" style={{height: '75%'}}></div>
+                        <div className="chart-bar" style={{height: '85%'}}></div>
+                      </div>
+                      <div className="chart-labels">
+                        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Suggestions by AI */}
+                <div className="dashboard-card suggestions-card">
+                  <div className="card-header">
+                    <h3>Suggestions by AI</h3>
+                    <button className="btn btn-outline">+ New</button>
+                  </div>
+                  <div className="suggestions-list">
+                    <div className="suggestion-item">
+                      <div className="suggestion-icon blue">🚀</div>
+                      <div className="suggestion-content">
+                        <h4>Optimize Email Workflow</h4>
+                        <p>Due date: Nov 26, 2024</p>
+                      </div>
+                    </div>
+                    <div className="suggestion-item">
+                      <div className="suggestion-icon teal">🌊</div>
+                      <div className="suggestion-content">
+                        <h4>Schedule Deep Work</h4>
+                        <p>Due date: Nov 28, 2024</p>
+                      </div>
+                    </div>
+                    <div className="suggestion-item">
+                      <div className="suggestion-icon green">📊</div>
+                      <div className="suggestion-content">
+                        <h4>Review Weekly Metrics</h4>
+                        <p>Due date: Nov 30, 2024</p>
+                      </div>
+                    </div>
+                    <div className="suggestion-item">
+                      <div className="suggestion-icon yellow">📄</div>
+                      <div className="suggestion-content">
+                        <h4>Automate Report Generation</h4>
+                        <p>Due date: Dec 5, 2024</p>
+                      </div>
+                    </div>
+                    <div className="suggestion-item">
+                      <div className="suggestion-icon purple">🔍</div>
+                      <div className="suggestion-content">
+                        <h4>AI Summary Review</h4>
+                        <p>Due date: Dec 8, 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Middle Column */}
+              <div className="dashboard-middle">
+                {/* Daily AI Brief */}
+                <div className="dashboard-card brief-card">
+                  <h3>Daily AI Brief</h3>
+                  <div className="brief-content">
+                    <div className="brief-item">
+                      <div className="brief-icon">📅</div>
+                      <div className="brief-text">
+                        <h4>Morning Focus Session</h4>
+                        <p>Time: 09:00 am - 11:00 am</p>
+                      </div>
+                    </div>
+                    <button className="btn btn-primary brief-btn">Start Focus Mode</button>
+                  </div>
+                </div>
+
+                {/* AI Progress */}
+                <div className="dashboard-card progress-card">
+                  <h3>AI Progress</h3>
+                  <div className="progress-circle">
+                    <div className="circle-chart">
+                      <div className="circle-fill" style={{'--progress': '73%'} as React.CSSProperties}></div>
+                      <div className="circle-content">
+                        <span className="progress-value">73%</span>
+                        <span className="progress-label">Tasks Automated</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="progress-legend">
+                    <div className="legend-item">
+                      <span className="legend-color completed"></span>
+                      <span>Completed</span>
+                    </div>
+                    <div className="legend-item">
+                      <span className="legend-color in-progress"></span>
+                      <span>In Progress</span>
+                    </div>
+                    <div className="legend-item">
+                      <span className="legend-color pending"></span>
+                      <span>Pending</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="dashboard-right">
+                {/* Time Tracker */}
+                <div className="dashboard-card time-tracker-card">
+                  <h3 className="signature-text">Time Tracker</h3>
+                  <div className="time-display">
+                    <span className="time-value">01:24:08</span>
+                  </div>
+                  <div className="time-controls">
+                    <button className="time-btn pause">⏸️</button>
+                    <button className="time-btn stop">⏹️</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
