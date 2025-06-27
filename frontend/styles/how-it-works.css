@@ -33,7 +33,7 @@
 /* Process Steps Section */
 .process-section {
   margin-bottom: 100px;
-  margin-top: -20px;
+  transform: translateY(-20px);
 }
 
 .section-title {

@@ -81,7 +81,7 @@ body.signin-page html {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  margin-top: -50px;
+  transform: translateY(-50px);
   flex: 1;
   padding-bottom: 40px;
 }
@@ -490,11 +490,10 @@ body:not(.signup-page) .copyright {
   justify-content: center;
   align-items: center;
   overflow: visible;
-  margin-left: -50px;
   margin-top: 0;
-  -webkit-transform: translateY(-110px);
-  -moz-transform: translateY(-110px);
-  transform: translateY(-110px);
+  -webkit-transform: translateX(-30px) translateY(-110px);
+  -moz-transform: translateX(-30px) translateY(-110px);
+  transform: translateX(-30px) translateY(-110px);
   will-change: transform;
   box-sizing: border-box;
 }
@@ -680,8 +679,7 @@ body:not(.signup-page) .copyright {
     width: calc(100% + 60px);
     min-height: calc(100dvh - 40px);
     padding: 40px 30px 40px 45px;
-    margin-left: -30px;
-    transform: translateY(-80px);
+    transform: translateX(-15px) translateY(-80px);
   }
   
   .visual-card h2 {

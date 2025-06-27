@@ -1,17 +1,30 @@
 import React from 'react';
 import Link from 'next/link';
+import { FaTwitter, FaLinkedin, FaFacebook, FaInstagram } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
-        <div className="footer-section">
+        <div className="footer-section footer-brand">
           <h3>YOUR MANAGER</h3>
           <p>The AI Chief-of-Staff that simplifies management and maximizes your potential productivity.</p>
-          <div className="social-icons">
-            <a href="#" className="social-icon">Twitter</a>
-            <a href="#" className="social-icon">LinkedIn</a>
-            <a href="#" className="social-icon">Facebook</a>
+          <div className="social-section">
+            <h4 className="social-heading">FOLLOW US ON SOCIAL MEDIA</h4>
+            <div className="social-icons">
+              <a href="#" className="social-icon" aria-label="Twitter">
+                <FaTwitter />
+              </a>
+              <a href="#" className="social-icon" aria-label="LinkedIn">
+                <FaLinkedin />
+              </a>
+              <a href="#" className="social-icon" aria-label="Facebook">
+                <FaFacebook />
+              </a>
+              <a href="#" className="social-icon" aria-label="Instagram">
+                <FaInstagram />
+              </a>
+            </div>
           </div>
         </div>
 

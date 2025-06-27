@@ -18,7 +18,10 @@
   font-size: 3rem;
   margin-bottom: 20px;
   font-weight: 700;
-  color: #111827;
+  background: linear-gradient(45deg, #111827, #6B7280);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .header p {
@@ -34,7 +37,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 40px;
-  margin-top: -10px;
+  transform: translateY(-10px);
   gap: 16px;
 }
 
@@ -105,7 +108,7 @@ input:checked + .slider:before {
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
   margin-bottom: 100px;
-  margin-top: -15px;
+  transform: translateY(-15px);
   justify-items: center;
 }
 
@@ -312,7 +315,7 @@ input:checked + .slider:before {
     grid-template-columns: 1fr;
     gap: 25px;
     margin-bottom: 80px;
-    margin-top: 0px;
+    transform: translateY(0);
   }
   
   .pricing-card {

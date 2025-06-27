@@ -1,8 +1,5 @@
 /* Navbar styles */
 .navbar {
-  background-color: #FFFFFF !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   height: 80px;
   display: flex;
   justify-content: center;
@@ -12,9 +9,35 @@
   left: 0;
   right: 0;
   z-index: 999;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 0 2rem;
-  border-bottom: 1px solid #E5E7EB !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform, background-color, box-shadow;
+}
+
+/* Navbar at top of page - semi-transparent, full width */
+.navbar-top {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  border-bottom: 1px solid transparent;
+}
+
+/* Navbar when scrolled - floating card style */
+.navbar-scrolled {
+  background-color: #FFFFFF;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 16px;
+  margin: 12px 80px 0 80px;
+  left: 0;
+  right: 0;
+  width: auto;
+  border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
 .navbar-container {
@@ -25,26 +48,30 @@
   max-width: 1300px;
   height: 100%;
   padding: 0 10px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateZ(0);
+}
+
+.navbar-scrolled .navbar-container {
+  padding: 0 20px;
 }
 
 .navbar-left {
   display: flex;
   align-items: center;
   text-decoration: none;
-  margin-left: -95px;
+  margin-left: 20px
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
 }
 
 .navbar-logo {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--text-primary);
-  margin-left: 0.5rem;
 }
 
 .nav-menu {
@@ -56,13 +83,12 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin-left: -5px;
 }
 
 .nav-item {
   height: 80px;
   padding: 0;
-  margin: 0 15px;
+  margin: 0 18px;
   display: flex;
   align-items: center;
 }
@@ -74,7 +100,7 @@
   text-decoration: none;
   padding: 0;
   height: 100%;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   transition: color 0.3s ease;
 }
 
@@ -86,7 +112,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-right: -75px;
+  margin-right: 20px;
 }
 
 .btn-login {
@@ -94,8 +120,8 @@
   color: var(--text-primary);
   border: 2px solid var(--border-medium);
   border-radius: 30px;
-  padding: 8px 22px;
-  font-size: 0.95rem;
+  padding: 10px 24px;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -113,8 +139,8 @@
   color: var(--primary-white);
   border: 2px solid var(--text-primary);
   border-radius: 30px;
-  padding: 8px 24px;
-  font-size: 0.95rem;
+  padding: 10px 26px;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -131,7 +157,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-right: -75px;
+  margin-right: 20px;
 }
 
 .btn-dashboard {
@@ -139,8 +165,8 @@
   color: var(--text-primary);
   border: 2px solid var(--border-medium);
   border-radius: 30px;
-  padding: 8px 20px;
-  font-size: 0.95rem;
+  padding: 10px 22px;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -249,6 +275,10 @@ main {
 }
 
 @media screen and (max-width: 960px) {
+  .navbar-scrolled {
+    margin: 12px 40px 0 40px;
+  }
+
   .navbar-container {
     position: relative;
   }
@@ -279,5 +309,12 @@ main {
   .nav-links {
     width: 100%;
     padding: 0 20px;
+  }
+}
+
+/* Additional responsive adjustments for small screens */
+@media screen and (max-width: 480px) {
+  .navbar-scrolled {
+    margin: 12px 20px 0 20px;
   }
 } 

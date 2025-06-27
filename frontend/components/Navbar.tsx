@@ -148,6 +148,7 @@ const Navbar: React.FC = () => {
   const [logoutTitle, setLogoutTitle] = useState('');
   const [logoutMessage, setLogoutMessage] = useState('');
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Check if user is logged in on component mount
   useEffect(() => {
@@ -158,6 +159,17 @@ const Navbar: React.FC = () => {
       setIsLoggedIn(true);
       setUser(JSON.parse(storedUser));
     }
+  }, []);
+
+  // Handle scroll effect for navbar styling
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = () => {
@@ -247,11 +259,10 @@ const Navbar: React.FC = () => {
         </div>
       )}
     
-      <nav className="navbar">
+      <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : 'navbar-top'}`}>
         <div className="navbar-container">
           <Link href="/" className="navbar-left">
             <div className="navbar-brand">
-              <Logo size={34} />
               <div className="navbar-logo">YOUR MANAGER</div>
             </div>
           </Link>
