@@ -54,9 +54,9 @@ const HowItWorksPage: React.FC = () => {
         <meta name="description" content="Learn how YourManager works as your AI Chief-of-Staff to save you time and boost productivity" />
       </Head>
 
-      <div className="container">
+      <div className="how-it-works-container">
         {/* Hero Section */}
-        <div className="hero">
+                  <div className="how-it-works-hero">
           <h1>How YourManager Works</h1>
           <p>Your AI Chief-of-Staff works seamlessly behind the scenes to transform your productivity, simplify your workflow, and give you back hours in your day.</p>
         </div>

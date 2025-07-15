@@ -54,7 +54,7 @@ const CountUpAnimation = ({ end, duration = 2000, suffix = '', prefix = '' }: {
   }, [end, duration, hasAnimated]);
 
   return (
-    <div ref={elementRef} className="stat-value">
+    <div ref={elementRef} className="auth-stat-value">
       {prefix}{Math.round(count)}{suffix}
     </div>
   );
@@ -538,22 +538,22 @@ const SignUpPage = () => {
             <h2>Manage Smarter, Not Harder</h2>
             <p className="tagline">Your AI-powered Chief-of-Staff for productivity, clarity, and control.</p>
             
-            <div className="stats-grid">
-              <div className="stat-box">
+            <div className="auth-stats-grid">
+              <div className="auth-stat-box">
                 <CountUpAnimation end={10} suffix="K+" duration={2500} />
-                <div className="stat-label">Hours Saved</div>
+                <div className="auth-stat-label">Hours Saved</div>
               </div>
-              <div className="stat-box">
+              <div className="auth-stat-box">
                 <CountUpAnimation end={97} suffix="%" duration={2200} />
-                <div className="stat-label">Executive Satisfaction</div>
+                <div className="auth-stat-label">Executive Satisfaction</div>
               </div>
-              <div className="stat-box">
+              <div className="auth-stat-box">
                 <CountUpAnimation end={24} suffix="/7" duration={2000} />
-                <div className="stat-label">AI Availability</div>
+                <div className="auth-stat-label">AI Availability</div>
               </div>
-              <div className="stat-box">
-                <div className="stat-value">Instant</div>
-                <div className="stat-label">Calendar & Email Sync</div>
+              <div className="auth-stat-box">
+                <div className="auth-stat-value">Instant</div>
+                <div className="auth-stat-label">Calendar & Email Sync</div>
               </div>
             </div>
           </div>

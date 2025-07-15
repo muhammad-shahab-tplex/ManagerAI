@@ -124,7 +124,7 @@ const PricingPage: React.FC = () => {
         <meta name="description" content="Choose the right plan for your productivity needs" />
       </Head>
 
-      <div className="container">
+      <div className="pricing-container">
         <div className="header">
           <h1>Choose Your Productivity Plan</h1>
           <p>Select the perfect plan to reclaim your time and boost productivity.</p>

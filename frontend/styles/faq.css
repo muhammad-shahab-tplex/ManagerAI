@@ -1,17 +1,17 @@
 /* FAQ Page Styles */
-.container {
+.faq-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
   color: #111827 !important;
 }
 
-.hero {
+.faq-hero {
   text-align: center;
   margin-bottom: 60px;
 }
 
-.hero h1 {
+.faq-hero h1 {
   font-size: 2.8rem;
   margin-bottom: 20px;
   background: linear-gradient(45deg, #111827, #6B7280);
@@ -20,7 +20,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero p {
+.faq-hero p {
   font-size: 1.2rem;
   color: #6B7280 !important;
   max-width: 700px;
@@ -279,7 +279,7 @@
 }
 
 @media (max-width: 768px) {
-  .hero h1 {
+  .faq-hero h1 {
     font-size: 2.2rem;
   }
 

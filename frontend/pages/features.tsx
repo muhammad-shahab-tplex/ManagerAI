@@ -100,9 +100,9 @@ const FeaturesPage: React.FC = () => {
         <meta name="description" content="Discover how YourManager helps you reclaim your time and boost productivity" />
       </Head>
 
-      <div className="container">
+      <div className="features-container">
         {/* Hero Section */}
-        <div className="hero">
+                  <div className="features-hero">
           <h1>Your AI-Powered Productivity Partner</h1>
           <p>YourManager combines cutting-edge AI with powerful productivity tools to help you focus on what truly matters.</p>
         </div>

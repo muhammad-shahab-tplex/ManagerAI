@@ -1,18 +1,18 @@
 /* Testimonials Page Styles */
-.container {
+.testimonials-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
   color: #111827 !important;
 }
 
-.hero {
+.testimonials-hero {
   text-align: center;
   margin-bottom: 30px;
   padding: 40px 20px;
 }
 
-.hero h1 {
+.testimonials-hero h1 {
   font-size: 3rem;
   margin-bottom: 20px;
   font-weight: 700;
@@ -22,7 +22,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero p {
+.testimonials-hero p {
   font-size: 1.2rem;
   color: #6B7280 !important;
   max-width: 700px;
@@ -199,18 +199,18 @@
   color: #1F2937 !important;
 }
 
-.stats-grid {
+.testimonials-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 40px;
 }
 
-.stat-item {
+.testimonials-stat-item {
   text-align: center;
   padding: 20px 15px;
 }
 
-.stat-number {
+.testimonials-stat-number {
   font-size: 2.8rem;
   font-weight: 800;
   color: #111827 !important;
@@ -221,7 +221,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.stat-label {
+.testimonials-stat-label {
   font-size: 1rem;
   color: #6B7280 !important;
   font-weight: 500;
@@ -241,7 +241,7 @@
   }
 }
 
-.stat-number.animate {
+.testimonials-stat-number.animate {
   animation: countUp 0.8s ease-out;
 }
 
@@ -331,18 +331,18 @@
     transform: translateY(0);
   }
   
-  .stats-grid {
+  .testimonials-stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
   }
 }
 
 @media (max-width: 768px) {
-  .hero {
+  .testimonials-hero {
     padding: 40px 20px;
   }
   
-  .hero h1 {
+  .testimonials-hero h1 {
     font-size: 2.5rem;
   }
   
@@ -385,16 +385,16 @@
     font-size: 1.8rem;
   }
   
-  .stats-grid {
+  .testimonials-stats-grid {
     grid-template-columns: 1fr;
     gap: 25px;
   }
   
-  .stat-number {
+  .testimonials-stat-number {
     font-size: 2.4rem;
   }
   
-  .stat-label {
+  .testimonials-stat-label {
     font-size: 0.9rem;
   }
   
@@ -418,7 +418,7 @@
 }
 
 @media (max-width: 480px) {
-  .hero h1 {
+  .testimonials-hero h1 {
     font-size: 2rem;
   }
   

@@ -1,18 +1,18 @@
 /* Features Page Styles */
-.container {
+.features-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
   color: #111827 !important;
 }
 
-.hero {
+.features-hero {
   text-align: center;
   margin-bottom: 80px;
   padding: 60px 20px;
 }
 
-.hero h1 {
+.features-hero h1 {
   font-size: 3rem;
   margin-bottom: 20px;
   font-weight: 700;
@@ -22,7 +22,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero p {
+.features-hero p {
   font-size: 1.2rem;
   color: #6B7280 !important;
   max-width: 700px;
@@ -280,11 +280,11 @@
 }
 
 @media screen and (max-width: 768px) {
-  .hero {
+  .features-hero {
     padding: 40px 20px;
   }
   
-  .hero h1 {
+  .features-hero h1 {
     font-size: 2.5rem;
   }
   
@@ -327,7 +327,7 @@
 }
 
 @media screen and (max-width: 480px) {
-  .hero h1 {
+  .features-hero h1 {
     font-size: 2rem;
   }
   

@@ -1,12 +1,12 @@
 /* Roadmap Page Styles */
-.container {
+.roadmap-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
   color: #111827 !important;
 }
 
-.hero {
+.roadmap-hero {
   text-align: center;
   margin-bottom: 60px;
 }

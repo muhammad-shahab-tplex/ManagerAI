@@ -110,9 +110,9 @@ const FAQPage: React.FC = () => {
         <meta name="description" content="Frequently asked questions about YourManager - the AI Chief-of-Staff that saves you 10+ hours per week" />
       </Head>
 
-      <div className="container">
+      <div className="faq-container">
         {/* Hero Section */}
-        <div className="hero">
+        <div className="faq-hero">
           <h1>Frequently Asked Questions</h1>
           <p>Find answers to common questions about YourManager's features, pricing, and how it can transform your productivity.</p>
         </div>

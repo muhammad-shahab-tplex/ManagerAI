@@ -1,18 +1,18 @@
 /* How It Works Page Styles */
-.container {
+.how-it-works-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
   color: #111827 !important;
 }
 
-.hero {
+.how-it-works-hero {
   text-align: center;
   margin-bottom: 40px;
   padding: 60px 20px;
 }
 
-.hero h1 {
+.how-it-works-hero h1 {
   font-size: 3rem;
   margin-bottom: 20px;
   font-weight: 700;
@@ -22,7 +22,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.hero p {
+.how-it-works-hero p {
   font-size: 1.2rem;
   color: #6B7280 !important;
   max-width: 700px;
@@ -287,11 +287,11 @@
 }
 
 @media (max-width: 768px) {
-  .hero {
+  .how-it-works-hero {
     padding: 40px 20px;
   }
   
-  .hero h1 {
+  .how-it-works-hero h1 {
     font-size: 2.5rem;
   }
   
@@ -333,7 +333,7 @@
 }
 
 @media (max-width: 480px) {
-  .hero h1 {
+  .how-it-works-hero h1 {
     font-size: 2rem;
   }
   

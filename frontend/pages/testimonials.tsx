@@ -150,9 +150,9 @@ const TestimonialsPage: React.FC = () => {
         <meta name="description" content="See what our customers say about YourManager - real testimonials from executives and founders who save 10+ hours weekly" />
       </Head>
 
-      <div className="container">
+      <div className="testimonials-container">
         {/* Hero Section */}
-        <div className="hero">
+        <div className="testimonials-hero">
           <h1>What Our Customers Say</h1>
           <p>Join thousands of executives and founders who have transformed their productivity with YourManager. Here's what they have to say about their experience.</p>
         </div>
@@ -195,30 +195,30 @@ const TestimonialsPage: React.FC = () => {
         {/* Stats Section */}
         <div className="stats-section" ref={statsRef}>
           <h2>Trusted by Thousands of Professionals</h2>
-          <div className="stats-grid">
-            <div className="stat-item">
-              <span className={`stat-number ${hasAnimated ? 'animate' : ''}`}>
+          <div className="testimonials-stats-grid">
+            <div className="testimonials-stat-item">
+              <span className={`testimonials-stat-number ${hasAnimated ? 'animate' : ''}`}>
                 {formatStatNumber(animatedStats.users, 'users')}
               </span>
-              <div className="stat-label">Active Users</div>
+              <div className="testimonials-stat-label">Active Users</div>
             </div>
-            <div className="stat-item">
-              <span className={`stat-number ${hasAnimated ? 'animate' : ''}`}>
+            <div className="testimonials-stat-item">
+              <span className={`testimonials-stat-number ${hasAnimated ? 'animate' : ''}`}>
                 {formatStatNumber(animatedStats.timeSaved, 'timeSaved')}
               </span>
-              <div className="stat-label">Hours Saved Monthly</div>
+              <div className="testimonials-stat-label">Hours Saved Monthly</div>
             </div>
-            <div className="stat-item">
-              <span className={`stat-number ${hasAnimated ? 'animate' : ''}`}>
+            <div className="testimonials-stat-item">
+              <span className={`testimonials-stat-number ${hasAnimated ? 'animate' : ''}`}>
                 {formatStatNumber(animatedStats.satisfaction, 'satisfaction')}
               </span>
-              <div className="stat-label">Customer Satisfaction</div>
+              <div className="testimonials-stat-label">Customer Satisfaction</div>
             </div>
-            <div className="stat-item">
-              <span className={`stat-number ${hasAnimated ? 'animate' : ''}`}>
+            <div className="testimonials-stat-item">
+              <span className={`testimonials-stat-number ${hasAnimated ? 'animate' : ''}`}>
                 {formatStatNumber(animatedStats.companies, 'companies')}
               </span>
-              <div className="stat-label">Companies Trust Us</div>
+              <div className="testimonials-stat-label">Companies Trust Us</div>
             </div>
           </div>
         </div>
